@@ -2,7 +2,17 @@
   "ru": {
     "translation": {
       "common": {
-        "title": "React one feed"
+        "title": "React one feed",
+        "buttons": {
+          "login": "Войти",
+          "registration": "Регистрация",
+          "exploreFirst": "Сначала изучить",
+          "back": "Назад"
+        },
+        "fields": {
+          "username": "Имя пользователя",
+          "password": "Пароль"
+        }
       }
     }
   }

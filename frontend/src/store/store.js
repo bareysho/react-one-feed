@@ -1,7 +1,6 @@
-import thunk from 'redux-thunk';
-import { createStore, combineReducers, applyMiddleware } from 'redux';
-import { composeWithDevTools } from 'redux-devtools-extension';
+import { configureStore } from '@reduxjs/toolkit';
 
-const reducers = combineReducers({});
+import { rootReducer } from '../reducers';
+import { isProductionMode } from '../constants/common';
 
-export const store = createStore(reducers, composeWithDevTools(applyMiddleware(thunk)));
+export const store = configureStore({ devTools: !isProductionMode, reducer: rootReducer });
