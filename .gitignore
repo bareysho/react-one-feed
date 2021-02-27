@@ -1,0 +1,17 @@
+/design
+/node_modules
+
+#FRONTEND
+/frontend/node_modules
+
+/frontend/coverage
+/frontend/build
+
+/frontend/.env
+
+/frontend/yarn-debug.log*
+/frontend/yarn-error.log*
+
+#BACKEND
+/backend/node_modules
+/backend/config.js
