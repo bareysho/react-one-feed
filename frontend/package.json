@@ -4,18 +4,36 @@
   "description": "Frontend for react-one-feed project",
   "private": true,
   "dependencies": {
+    "final-form": "^4.20.1",
+    "history": "^4.10.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-final-form": "^6.5.2",
+    "react-router": "^5.2.0",
     "react-scripts": "4.0.3",
     "sass": "^1.32.8",
-    "react-router": "^5.2.0",
-    "history": "^4.10.1"
+    "redux": "^4.0.5",
+    "react-redux": "^7.2.1",
+    "redux-devtools-extension": "^2.13.8",
+    "redux-thunk": "^2.3.0"
+  },
+  "devDependencies": {
+    "prettier": "^2.2.1",
+    "eslint": "^7.20.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-jest-formatting": "^2.0.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-sort-keys-fix": "^1.1.1",
+    "babel-plugin-import": "^1.13.1",
+    "customize-cra": "^1.0.0"
   },
   "scripts": {
     "serve": "react-scripts start",
     "bundle": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "lint": "eslint src/**/*.{js,jsx}",
+    "lint-fix": "eslint src/**/*.{js,jsx} --fix"
   },
   "eslintConfig": {
     "extends": [
