@@ -5,6 +5,8 @@ import { Provider } from 'react-redux';
 import { App } from './App';
 import { store } from './store';
 
+import './resources/i18n';
+
 import './styles/global.scss';
 
 ReactDOM.render(
