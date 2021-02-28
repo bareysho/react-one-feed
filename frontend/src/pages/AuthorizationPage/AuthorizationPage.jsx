@@ -1,59 +1,59 @@
 import React, { useState, useCallback } from 'react';
-import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
+import { Button } from 'components/controls/Button/Button';
 import { LOGIN_PAGE_MODE } from 'constants/loginPageMode';
+import { BUTTON_COLOR_TYPE } from 'constants/buttonColorType';
 
 import { LoginForm } from './LoginForm';
+import { RegistrationForm } from './RegistrationForm';
 
 import './AuthorizationPage.scss';
 
 export const AuthorizationPage = () => {
   const { t } = useTranslation();
 
-  const [pageMode, setPageMode] = useState(LOGIN_PAGE_MODE.buttons);
+  const [pageMode, setPageMode] = useState(LOGIN_PAGE_MODE.selectAuthMenu);
 
   const setLoginMode = useCallback(() => setPageMode(LOGIN_PAGE_MODE.login), []);
 
-  const setSignUpMode = useCallback(() => setPageMode(LOGIN_PAGE_MODE.signUp), []);
+  const setRegistrationMode = useCallback(() => setPageMode(LOGIN_PAGE_MODE.registration), []);
 
-  const setButtonsMode = useCallback(() => setPageMode(LOGIN_PAGE_MODE.buttons), []);
+  const setSelectAuthMenu = useCallback(() => setPageMode(LOGIN_PAGE_MODE.selectAuthMenu), []);
 
   return (
-    <div className="home">
-      <div className="row h-100">
-        <div className="col-8 d-none d-md-flex flex-column justify-content-end pl-5 home__left" />
-        <div className="col-12 col-md-4 bg-white home__right d-flex flex-column justify-content-center">
+    <div className="authorization">
+      <div className="main row">
+        <div className="col-8 column left">
+          <h1 className="text-white ml-4">{t('common.title')}</h1>
+        </div>
+        <div className="col-12 col-md-4 column right">
           <div className="row pr-md-3">
             <div className="col-12 px-4">
-              <div className="card border-0 rounded-0">
+              <div className="card">
                 <div className="card-body">
-                  {pageMode === LOGIN_PAGE_MODE.buttons && (
+                  {pageMode === LOGIN_PAGE_MODE.selectAuthMenu && (
                   <div>
-                    <button
-                      type="button"
-                      className="btn btn-outline-brand btn-block rounded-pill"
-                      onClick={setSignUpMode}
-                    >
-                      {t('common.buttons.registration')}
-                    </button>
-                    <button
-                      type="button"
-                      className="btn btn-brand btn-block text-light rounded-pill"
+                    <Button
+                      title={t('common.buttons.registration')}
+                      colorType={BUTTON_COLOR_TYPE.outlineBrand}
+                      onClick={setRegistrationMode}
+                    />
+                    <Button
+                      title={t('common.buttons.login')}
+                      colorType={BUTTON_COLOR_TYPE.brand}
                       onClick={setLoginMode}
-                    >
-                      {t('common.buttons.login')}
-                    </button>
+                    />
                     <hr />
-                    <Link
+                    <Button
+                      title={t('common.buttons.exploreFirst')}
                       to="/explore"
-                      className="btn btn-brand-secondary btn-block text-white rounded-pill"
-                    >
-                      {t('common.buttons.exploreFirst')}
-                    </Link>
+                      colorType={BUTTON_COLOR_TYPE.brandSecondary}
+                    />
                   </div>
                   )}
-                  {pageMode === LOGIN_PAGE_MODE.login && <LoginForm backMethod={setButtonsMode} />}
+                  {pageMode === LOGIN_PAGE_MODE.login && <LoginForm backMethod={setSelectAuthMenu} />}
+                  {pageMode === LOGIN_PAGE_MODE.registration && <RegistrationForm backMethod={setSelectAuthMenu} />}
                 </div>
               </div>
             </div>

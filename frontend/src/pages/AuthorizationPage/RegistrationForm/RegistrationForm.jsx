@@ -6,15 +6,12 @@ import { useTranslation } from 'react-i18next';
 
 import { login } from 'actions/auth';
 import { getAuth } from 'selectors/auth';
-
 import { Button } from 'components/controls/Button/Button';
 import { BUTTON_TYPE } from 'constants/buttonType';
 import { BUTTON_COLOR_TYPE } from 'constants/buttonColorType';
-
-import './LoginForm.scss';
 import { Input } from 'components';
 
-export const LoginForm = ({ backMethod }) => {
+export const RegistrationForm = ({ backMethod }) => {
   const { t } = useTranslation();
 
   const dispatch = useDispatch();
@@ -38,10 +35,15 @@ export const LoginForm = ({ backMethod }) => {
               type="password"
               label={t('common.fields.password')}
             />
+            <Input
+              name="confirmation-password"
+              type="password"
+              label={t('common.fields.confirmation-password')}
+            />
             <br />
             <Button
               type={BUTTON_TYPE.submit}
-              title={t('common.buttons.login')}
+              title={t('common.buttons.registration')}
             />
             {backMethod && (
               <Button
@@ -58,10 +60,10 @@ export const LoginForm = ({ backMethod }) => {
   );
 };
 
-LoginForm.propTypes = {
+RegistrationForm.propTypes = {
   backMethod: PropTypes.func,
 };
 
-LoginForm.defaultProps = {
+RegistrationForm.defaultProps = {
   backMethod: undefined,
 };
