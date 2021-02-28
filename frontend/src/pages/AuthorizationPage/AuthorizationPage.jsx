@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
-import { LOGIN_PAGE_MODE } from '../../constants/loginPageMode';
+import { LOGIN_PAGE_MODE } from 'constants/loginPageMode';
 
 import { LoginForm } from './LoginForm';
 

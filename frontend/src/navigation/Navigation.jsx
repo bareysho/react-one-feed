@@ -1,8 +1,8 @@
 import React from 'react';
 import { Route, Router, Switch } from 'react-router';
 
-import { ROUTES_PATHS } from '../constants/routesPaths';
-import { AuthorizationPage } from '../pages/AuthorizationPage';
+import { ROUTES_PATHS } from 'constants/routesPaths';
+import { AuthorizationPage } from 'pages/AuthorizationPage';
 
 import { history } from './history';
 

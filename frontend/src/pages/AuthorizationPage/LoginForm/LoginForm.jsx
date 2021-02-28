@@ -4,8 +4,8 @@ import { Form, Field } from 'react-final-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
-import { login } from '../../../actions/auth';
-import { getAuth } from '../../../selectors/auth';
+import { login } from 'actions/auth';
+import { getAuth } from 'selectors/auth';
 
 import './LoginForm.scss';
 

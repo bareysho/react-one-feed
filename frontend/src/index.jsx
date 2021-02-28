@@ -2,12 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 
-import { App } from './App';
-import { store } from './store';
+import { App } from 'App';
+import { store } from 'store';
 
-import './resources/i18n';
+import 'resources/i18n';
 
-import './styles/global.scss';
+import 'styles/global.scss';
 
 ReactDOM.render(
   <React.StrictMode>
