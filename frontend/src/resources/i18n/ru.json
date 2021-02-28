@@ -11,7 +11,8 @@
         },
         "fields": {
           "username": "Имя пользователя",
-          "password": "Пароль"
+          "password": "Пароль",
+          "confirmation-password": "Подтверждение праоля"
         }
       }
     }

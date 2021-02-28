@@ -1,15 +1,29 @@
-.home {
+@import "styles/variables";
+
+.authorization {
   height: 100vh;
   overflow-x: hidden;
-  background-size: cover;
-  background-image: url("../../assets/images/bg_home.jpg");
-  background-position: center;
-  background-repeat: no-repeat;
+  background-color: $blue;
 
-  &__left {
-    &__text {
-      white-space: pre;
-      text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  .main.row {
+    height: 100%;
+
+    .column {
+      flex-direction: column;
+      display: flex;
+    }
+
+    .column.left {
+      justify-content: flex-end;
+
+      @media (max-width: 768px) {
+        display: none;
+      }
+    }
+
+    .column.right {
+      justify-content: center;
+      background-color: white;
     }
   }
 }
