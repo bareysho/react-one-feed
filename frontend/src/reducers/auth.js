@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { login } from '../actions/auth';
-import { USER_KEY } from '../constants/common';
+import { login } from 'actions/auth';
+import { USER_KEY } from 'constants/common';
 
 export const getUserFromLS = () => {
   const userData = localStorage.getItem(USER_KEY) || '';

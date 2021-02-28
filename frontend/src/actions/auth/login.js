@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-import { authApi } from '../../api/authApi';
-import { USER_KEY } from '../../constants/common';
+import { USER_KEY } from 'constants/common';
+import { authApi } from 'api/authApi';
 
 export const login = createAsyncThunk('@auth/login', async ({ username, password }) => {
   const { data } = await authApi.login(username, password);
