@@ -12,7 +12,16 @@
         "fields": {
           "username": "Имя пользователя",
           "password": "Пароль",
-          "confirmation-password": "Подтверждение праоля"
+          "confirmationPassword": "Подтверждение праоля",
+          "email": "Email адрес"
+        }
+      },
+      "validators": {
+        "baseControlValidators": {
+          "required": "Поле обязательно для заполнения",
+          "passwordsMissMatch": "Введенные пароли не совпадают",
+          "invalidEmail": "E-mail введен некорректно",
+          "onlyLatinField": "Поле может содержать буквы латинского алфавита и символы"
         }
       }
     }

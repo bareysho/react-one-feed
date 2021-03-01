@@ -10,6 +10,8 @@ import { Button } from 'components/controls/Button/Button';
 import { BUTTON_TYPE } from 'constants/buttonType';
 import { BUTTON_COLOR_TYPE } from 'constants/buttonColorType';
 import { Input } from 'components';
+import { onlyLatin, required, validateEmail } from 'validators/baseControlValidators';
+import { registrationPasswordsValidate } from 'validators/authorizationPageValidators';
 
 export const RegistrationForm = ({ backMethod }) => {
   const { t } = useTranslation();
@@ -23,22 +25,36 @@ export const RegistrationForm = ({ backMethod }) => {
   return (
     <Form
       onSubmit={onSubmit}
+      validate={registrationPasswordsValidate}
       render={({ handleSubmit }) => (
         <form onSubmit={handleSubmit}>
           <fieldset disabled={isFetch}>
             <Input
               name="username"
+              validators={[required, onlyLatin]}
               label={t('common.fields.username')}
+              maxLength={32}
+            />
+            <Input
+              name="email"
+              type="email"
+              validators={[required, validateEmail]}
+              label={t('common.fields.email')}
+              maxLength={64}
             />
             <Input
               name="password"
               type="password"
+              validators={[required]}
               label={t('common.fields.password')}
+              maxLength={64}
             />
             <Input
-              name="confirmation-password"
+              name="confirmationPassword"
               type="password"
-              label={t('common.fields.confirmation-password')}
+              validators={[required]}
+              label={t('common.fields.confirmationPassword')}
+              maxLength={64}
             />
             <br />
             <Button
