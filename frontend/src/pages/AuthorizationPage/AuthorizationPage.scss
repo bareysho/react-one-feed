@@ -1,0 +1,29 @@
+@import "styles/variables";
+
+.authorization {
+  height: 100vh;
+  overflow-x: hidden;
+  background-color: $blue;
+
+  .main.row {
+    height: 100%;
+
+    .column {
+      flex-direction: column;
+      display: flex;
+    }
+
+    .column.left {
+      justify-content: flex-end;
+
+      @media (max-width: 768px) {
+        display: none;
+      }
+    }
+
+    .column.right {
+      justify-content: center;
+      background-color: white;
+    }
+  }
+}

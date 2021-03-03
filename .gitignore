@@ -1,5 +1,6 @@
 /design
 /node_modules
+.idea
 
 #FRONTEND
 /frontend/node_modules

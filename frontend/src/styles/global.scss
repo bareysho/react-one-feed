@@ -1,3 +1,19 @@
+@import "variables";
+
+.cropper-view-box {
+  border-radius: 50% !important;
+}
+
+$theme-colors: (
+        "brand": $blue,
+        "brand-secondary": $gray,
+);
+
+@import "node_modules/bootstrap/scss/bootstrap";
+@import "node_modules/bootstrap/scss/functions";
+@import "node_modules/bootstrap/scss/variables";
+@import "node_modules/bootstrap/scss/mixins/_breakpoints";
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -10,4 +26,30 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.ws-pre-line {
+  white-space: pre-line;
+}
+
+.sh-1 {
+  box-shadow: 0 20px 26px -25px rgba(0, 0, 0, 0.5);
+}
+
+.bg-gray {
+  background-color: $gray-light;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.montserrat {
+  font-family: "Montserrat", sans-serif;
+}
+
+.d-text-underline {
+  &:hover {
+    text-decoration-line: underline;
+  }
 }

@@ -4,16 +4,49 @@
   "description": "Frontend for react-one-feed project",
   "private": true,
   "dependencies": {
+    "bootstrap": "^4.6.0",
+    "final-form": "^4.20.1",
+    "history": "^4.10.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-final-form": "^6.5.2",
+    "react-router": "^5.2.0",
     "react-scripts": "4.0.3",
-    "sass": "^1.32.8"
+    "i18next": "^19.9.0",
+    "react-i18next": "^11.8.8",
+    "sass": "^1.32.8",
+    "redux": "^4.0.5",
+    "react-redux": "^7.2.1",
+    "react-router-dom": "^5.1.2",
+    "redux-devtools-extension": "^2.13.8",
+    "redux-thunk": "^2.3.0",
+    "axios": "^0.21.1",
+    "prop-types": "^15.7.2",
+    "classnames": "^2.2.6"
+  },
+  "devDependencies": {
+    "@reduxjs/toolkit": "^1.4.0",
+    "babel-plugin-import": "^1.13.1",
+    "prettier": "^2.2.1",
+    "eslint": "^7.21.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-import-resolver-node": "^0.3.4",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jest": "^24.1.5",
+    "eslint-plugin-jest-formatting": "^2.0.1",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-react": "^7.22.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "eslint-plugin-sort-keys-fix": "^1.1.1"
   },
   "scripts": {
     "serve": "react-scripts start",
     "bundle": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "lint": "eslint src/**/*.{js,jsx}",
+    "lint-fix": "eslint src/**/*.{js,jsx} --fix"
   },
   "eslintConfig": {
     "extends": [

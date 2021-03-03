@@ -1,0 +1,29 @@
+{
+  "ru": {
+    "translation": {
+      "common": {
+        "title": "React one feed",
+        "buttons": {
+          "login": "Войти",
+          "registration": "Регистрация",
+          "exploreFirst": "Сначала изучить",
+          "back": "Назад"
+        },
+        "fields": {
+          "username": "Имя пользователя",
+          "password": "Пароль",
+          "confirmationPassword": "Подтверждение праоля",
+          "email": "Email адрес"
+        }
+      },
+      "validators": {
+        "baseControlValidators": {
+          "required": "Поле обязательно для заполнения",
+          "passwordsMissMatch": "Введенные пароли не совпадают",
+          "invalidEmail": "E-mail введен некорректно",
+          "onlyLatinField": "Поле может содержать буквы латинского алфавита и символы"
+        }
+      }
+    }
+  }
+}
