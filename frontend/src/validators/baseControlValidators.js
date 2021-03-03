@@ -1,4 +1,5 @@
 import i18n from 'resources/i18n';
+import { getPluralIndex } from 'utils/plural';
 
 export const required = (value) => (value ? undefined : i18n.t('validators.baseControlValidators.required'));
 
@@ -18,4 +19,13 @@ export const onlyLatin = (value) => {
   const onlyLatinRegexp = /^[a-zA-Z0-9()*_\-!#$%^&*,."\'\][]*$/;
 
   return validateRegexp(value, onlyLatinRegexp, i18n.t('validators.baseControlValidators.onlyLatinField'));
+}
+
+export const minLength = length => value => {
+  const pluralIndex = getPluralIndex(length);
+
+  const minLengthText = i18n.t('validators.baseControlValidators.minLength', { length });
+  const symbolsPluralText = i18n.t('common.plural.symbolInterval', { count: pluralIndex, postProcess: 'interval' });
+
+  return `${value}`.length >= length ? undefined : `${minLengthText} ${symbolsPluralText}`;
 }

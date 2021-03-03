@@ -10,7 +10,7 @@ import { Button } from 'components/controls/Button/Button';
 import { BUTTON_TYPE } from 'constants/buttonType';
 import { BUTTON_COLOR_TYPE } from 'constants/buttonColorType';
 import { Input } from 'components';
-import { onlyLatin, required, validateEmail } from 'validators/baseControlValidators';
+import { minLength, onlyLatin, required, validateEmail } from 'validators/baseControlValidators';
 import { registrationPasswordsValidate } from 'validators/authorizationPageValidators';
 
 export const RegistrationForm = ({ backMethod }) => {
@@ -31,7 +31,7 @@ export const RegistrationForm = ({ backMethod }) => {
           <fieldset disabled={isFetch}>
             <Input
               name="username"
-              validators={[required, onlyLatin]}
+              validators={[required, onlyLatin, minLength(4)]}
               label={t('common.fields.username')}
               maxLength={32}
             />
@@ -45,14 +45,14 @@ export const RegistrationForm = ({ backMethod }) => {
             <Input
               name="password"
               type="password"
-              validators={[required]}
+              validators={[required, minLength(6)]}
               label={t('common.fields.password')}
               maxLength={64}
             />
             <Input
               name="confirmationPassword"
               type="password"
-              validators={[required]}
+              validators={[required, minLength(6)]}
               label={t('common.fields.confirmationPassword')}
               maxLength={64}
             />

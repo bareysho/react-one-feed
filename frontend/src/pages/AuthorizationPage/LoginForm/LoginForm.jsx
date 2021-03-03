@@ -5,13 +5,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
 import { login } from 'actions/auth';
-import { getAuth } from 'selectors/auth';
 
 import { Input } from 'components';
 import { Button } from 'components/controls/Button/Button';
 import { BUTTON_TYPE } from 'constants/buttonType';
 import { BUTTON_COLOR_TYPE } from 'constants/buttonColorType';
 import { onlyLatin, required } from 'validators/baseControlValidators';
+import { FORM_ERROR } from 'final-form';
+import { store } from 'store';
+import { getAuth } from 'selectors/auth';
 
 import './LoginForm.scss';
 
@@ -20,16 +22,37 @@ export const LoginForm = ({ backMethod }) => {
 
   const dispatch = useDispatch();
 
-  const { isFetch } = useSelector(getAuth);
+  const { isLoading } = useSelector(getAuth);
 
-  const onSubmit = useCallback((credentials) => { dispatch(login(credentials)); }, [dispatch]);
+  const onSubmit = useCallback(async (credentials) => {
+    await dispatch(login(credentials));
+
+    const { error } = store.getState().auth;
+
+    if (error) {
+      return {
+        username: ' ',
+        password: ' ',
+        [FORM_ERROR]: t(`requestErrors.${error}`),
+      };
+    }
+
+    return undefined;
+  }, [dispatch, t]);
 
   return (
     <Form
       onSubmit={onSubmit}
-      render={({ handleSubmit }) => (
-        <form onSubmit={handleSubmit}>
-          <fieldset disabled={isFetch}>
+      render={({ submitError, handleSubmit }) => (
+        <form className="login-form" onSubmit={handleSubmit}>
+          <fieldset className="field-set" disabled={isLoading}>
+            {isLoading && (
+              <div className="spinner-wrapper">
+                <div className="spinner-border" role="status">
+                  <span className="sr-only">Loading...</span>
+                </div>
+              </div>
+            )}
             <Input
               name="username"
               label={t('common.fields.username')}
@@ -39,24 +62,26 @@ export const LoginForm = ({ backMethod }) => {
             <Input
               name="password"
               type="password"
+              className="password"
               label={t('common.fields.password')}
               validators={[required]}
               maxLength={64}
             />
-            <br />
-            <Button
-              type={BUTTON_TYPE.submit}
-              title={t('common.buttons.login')}
-            />
-            {backMethod && (
-              <Button
-                type={BUTTON_TYPE.button}
-                title={t('common.buttons.back')}
-                colorType={BUTTON_COLOR_TYPE.brandSecondary}
-                onClick={backMethod}
-              />
-            )}
+            {submitError && <small className="text-danger">{submitError}</small>}
           </fieldset>
+          <br />
+          <Button
+            type={BUTTON_TYPE.submit}
+            title={t('common.buttons.login')}
+          />
+          {backMethod && (
+          <Button
+            type={BUTTON_TYPE.button}
+            title={t('common.buttons.back')}
+            colorType={BUTTON_COLOR_TYPE.brandSecondary}
+            onClick={backMethod}
+          />
+          )}
         </form>
       )}
     />
