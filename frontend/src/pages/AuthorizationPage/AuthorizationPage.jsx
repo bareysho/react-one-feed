@@ -24,10 +24,10 @@ export const AuthorizationPage = () => {
   return (
     <div className="authorization">
       <div className="main row">
-        <div className="col-8 column left">
+        <div className="col-md-7 col-lg-8 col-xl-9 column left">
           <h1 className="text-white ml-4">{t('common.title')}</h1>
         </div>
-        <div className="col-12 col-md-4 column right">
+        <div className="col-12 col-md-5 col-lg-4 col-xl-3 column right">
           <div className="row pr-md-3">
             <div className="col-12 px-4">
               <div className="card">
