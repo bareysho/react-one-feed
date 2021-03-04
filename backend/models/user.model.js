@@ -28,6 +28,7 @@ userSchema.set('toJSON', {
   transform: (doc, ret) => {
     delete ret._id;
     delete ret.passwordHash;
+    delete ret.salt;
   }
 });
 
