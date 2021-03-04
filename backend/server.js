@@ -4,6 +4,8 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 
+const passport = require('config/passport');
+
 const apiRouter = require('routes/api');
 const errorHandler = require('middlewares/errorHandler');
 
@@ -22,6 +24,7 @@ app.use(bodyParser.json());
 app.use(cors({ origin: (origin, callback) => callback(null, true), credentials: true }));
 
 app.use(cookieParser());
+app.use(passport.initialize())
 app.use(apiRouter);
 
 app.use(errorHandler);

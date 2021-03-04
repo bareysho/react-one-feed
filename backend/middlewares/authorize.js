@@ -1,41 +1,58 @@
-const jwt = require('express-jwt');
+const passport = require('passport');
 
-const { User, RefreshToken } = require('database/mongoose');
+const { RefreshToken } = require('database/mongoose');
+
 const { isStringType } = require('utils/type');
-const { TOKEN_EXPIRED } = require('constants/message');
+const { TOKEN_EXPIRED, INVALID_USER_ROLE } = require('constants/message');
 
-const { SECRET_KEY } = require('../config');
+const getOwnsToken = (user) => {
+  return RefreshToken.find({ user: user.id })
+    .then(refreshTokens => {
+      user.ownsToken = token => !!refreshTokens.find(refreshToken => refreshToken.token === token);
 
-const authorize = (roles = []) => {
-  if (isStringType(roles)) {
-    roles = [roles];
-  }
-
-  return [
-    // authenticate JWT token and attach user to request object (req.user)
-    jwt({ secret: SECRET_KEY, algorithms: ['HS256'] }),
-    (req, res, next) => {
-      return User.findById(req.user.id)
-        .then(user => {
-          const isRoleIncorrect = roles.length && !roles.includes(user.role);
-
-          if (!user || isRoleIncorrect) {
-            // user no longer exists or role not authorized
-            return res.status(401).json({ message: TOKEN_EXPIRED });
-          }
-
-          // authentication and authorization successful
-          req.user.role = user.role;
-
-          return RefreshToken.find({ user: user.id })
-            .then(refreshTokens => {
-              req.user.ownsToken = token => !!refreshTokens.find(refreshToken => refreshToken.token === token);
-
-              next();
-            })
-        })
-    }
-  ];
+      return user;
+    })
 }
 
-module.exports = authorize;
+const authenticateJWT = (callback, roles = []) => {
+  return (req, res, next) => {
+    if (isStringType(roles)) {
+      roles = [roles];
+    }
+
+    const superCallback = (err, user, message) => {
+      const isRoleIncorrect = roles.length && !roles.includes(user.role);
+
+      if (!user) {
+        return res.status(401).json({ message: TOKEN_EXPIRED });
+      } else if (isRoleIncorrect) {
+        return res.status(401).json({ message: INVALID_USER_ROLE });
+      } else {
+        return getOwnsToken(user)
+          .then(user => callback(req, res, next)(err, user, message))
+      }
+    }
+
+    return passport.authenticate('jwt', {}, superCallback)(req, res, next)
+  }
+}
+
+const authenticateLocal = (callback) => {
+  return (req, res, next) => {
+    const superCallback = (err, user, message) => {
+      if (!user) {
+        return res.status(401).json(message);
+      } else {
+        return getOwnsToken(user)
+          .then(user => callback(req, res, next)(err, user, message))
+      }
+    }
+
+    return passport.authenticate('local', {}, superCallback)(req, res, next)
+  }
+}
+
+module.exports = {
+  authenticateJWT,
+  authenticateLocal,
+}
