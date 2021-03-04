@@ -14,7 +14,6 @@ export const initialState = {
   isLoading: false,
   isAuthenticated: false,
   verified: false,
-  error: null,
   user: null,
 };
 
@@ -39,7 +38,6 @@ export const authSlice = createSlice({
       return ({
         ...state,
         isLoading: false,
-        error: action.payload.response.data.message
       })
     });
     builder.addCase(logout.fulfilled, (state, action) => ({
