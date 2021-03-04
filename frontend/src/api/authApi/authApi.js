@@ -4,7 +4,11 @@ const login = ({ username, password }) => {
   return apiInstance.post('/auth/authenticate', { username, password }, { withCredentials: true });
 }
 
-const logout = () => {
+const refreshToken = () => {
+  return apiInstance.post('/auth/refresh-token', {}, { withCredentials: true });
+};
+
+const revokeToken = () => {
   return apiInstance.post('/auth/revoke-token', {}, { withCredentials: true });
 };
 
@@ -18,8 +22,9 @@ const registration = (params) => {
 
 export const authApi = {
   login,
-  logout,
+  revokeToken,
   registration,
   recallUser,
+  refreshToken,
 }
 

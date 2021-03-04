@@ -1,8 +1,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
+import { NavigationService } from 'navigation';
 import { USER_KEY } from 'constants/common';
 import { authApi } from 'api/authApi';
-import { NavigationService } from 'navigation';
+import { getLocalStorageUser } from 'utils/localStorage';
 
 export const storeToken = (token) => {
   localStorage.setItem(USER_KEY, JSON.stringify(token));
@@ -12,7 +13,7 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 export const recallUser = createAsyncThunk('@auth/recallUser', async (params, { rejectWithValue }) => {
   try {
-    const { token, id } = (localStorage.getItem(USER_KEY) && JSON.parse(localStorage.getItem(USER_KEY))) || {};
+    const { token, id } = getLocalStorageUser();
 
     const { data } = await authApi.recallUser(id);
 
@@ -28,18 +29,18 @@ export const login = createAsyncThunk('@auth/login', async ({ username, password
 
     const { data } = await authApi.login({ username, password });
 
-    storeToken(data);
+    localStorage.setItem(USER_KEY, JSON.stringify(data));
 
     NavigationService.redirectTo('/home');
 
     return data;
   } catch (error) {
-    return rejectWithValue(error);
+    return rejectWithValue(error.response.data.message);
   }
 });
 
 export const logout = createAsyncThunk('@auth/logout', async () => {
-  await authApi.logout();
+  await authApi.revokeToken();
 
   localStorage.removeItem(USER_KEY);
 })

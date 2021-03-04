@@ -11,9 +11,9 @@ import { Button } from 'components/controls/Button/Button';
 import { BUTTON_TYPE } from 'constants/buttonType';
 import { BUTTON_COLOR_TYPE } from 'constants/buttonColorType';
 import { onlyLatin, required } from 'validators/baseControlValidators';
-import { FORM_ERROR } from 'final-form';
-import { store } from 'store';
 import { getAuth } from 'selectors/auth';
+
+import { handleSubmitError } from './helper';
 
 import './LoginForm.scss';
 
@@ -25,20 +25,10 @@ export const LoginForm = ({ backMethod }) => {
   const { isLoading } = useSelector(getAuth);
 
   const onSubmit = useCallback(async (credentials) => {
-    await dispatch(login(credentials));
+    const response = await dispatch(login(credentials));
 
-    const { error } = store.getState().auth;
-
-    if (error) {
-      return {
-        username: ' ',
-        password: ' ',
-        [FORM_ERROR]: t(`requestErrors.${error}`),
-      };
-    }
-
-    return undefined;
-  }, [dispatch, t]);
+    return handleSubmitError(response);
+  }, [dispatch]);
 
   return (
     <Form
