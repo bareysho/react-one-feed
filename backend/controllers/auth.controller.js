@@ -1,19 +1,15 @@
 const express = require('express');
 
-const passport = require('passport');
-
 const router = express.Router();
-
-const authorize = require('middlewares/authorize');
 
 const authService = require('services/auth.service');
 const refreshTokenService = require('services/refreshToken.service');
-const accessTokenService = require('services/accessToken.service');
+const userService = require('services/user.service');
+
 const { authenticateJWT } = require('middlewares/authorize');
 const { authenticateLocal } = require('middlewares/authorize');
-const { basicDetails } = require('utils/user');
 
-const { TOKEN_REVOKED, TOKEN_EXPIRED, TOKEN_REQUIRED, INVALID_CREDENTIALS } = require('constants/message');
+const { TOKEN_REVOKED, TOKEN_EXPIRED, TOKEN_REQUIRED, EMAIL_EXISTS, USERNAME_EXISTS } = require('constants/message');
 const { ADMIN_ROLE } = require('constants/role');
 const { REFRESH_TOKEN_COOKIE } = require('constants/cookie');
 
@@ -25,6 +21,44 @@ const setTokenCookie = (res, token) => {
   };
 
   res.cookie(REFRESH_TOKEN_COOKIE, token, cookieOptions);
+}
+
+const validateRegistration = ({ username, email }) => {
+  const errors = [];
+
+  return userService.getUserByEmail(email)
+    .then(user => {
+      if (user) errors.push(EMAIL_EXISTS);
+    })
+    .then(() => userService.getUserByUsername(username))
+    .then(user => {
+      if (user) errors.push(USERNAME_EXISTS);
+    })
+    .then(() => errors);
+}
+
+const registration = (req, res, next) => {
+  const ipAddress = req.ip;
+  const { email, username, password } = req.body;
+
+  return validateRegistration({ username, email})
+    .then((errors) => {
+      if (errors.length) {
+        res.status(400).json({ message: errors });
+      } else {
+        return userService.createUser({ email, username, password })
+          .then(user => {
+            return authService.authenticate(user, ipAddress)
+              .then(({ refreshToken, ...user }) => {
+                setTokenCookie(res, refreshToken);
+                res.json(user);
+              })
+              .catch(error => {
+                res.status(401).json({ message: error });
+              });
+        })
+      }
+    })
 }
 
 
@@ -85,6 +119,7 @@ const refreshTokens = (req, res, next) => {
   }
 }
 
+router.post('/registration', registration);
 router.post('/authenticate', authenticateLocal(authenticate));
 router.post('/refresh-token', authenticateJWT(refreshToken));
 
