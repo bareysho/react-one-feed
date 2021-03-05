@@ -29,7 +29,9 @@
         }
       },
       "requestErrors": {
-        "INVALID_CREDENTIALS_ERROR": "Неверное имя пользователя или пароль"
+        "INVALID_CREDENTIALS_ERROR": "Неверное имя пользователя или пароль",
+        "EMAIL_EXISTS": "Email уже зарегистрирован",
+        "USERNAME_EXISTS": "Имя пользователя уже зарегистрировано"
       }
     }
   }

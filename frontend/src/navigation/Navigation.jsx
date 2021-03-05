@@ -5,8 +5,7 @@ import { ROUTES_PATHS } from 'constants/routesPaths';
 import { AuthorizationPage } from 'pages/AuthorizationPage';
 
 import { NavigationBar } from 'pages/Home/Home';
-import { PublicRoute } from 'components/Routes/PublicRoute';
-import { PrivateRoute } from 'components/Routes/PrivateRoute';
+import { PrivateRoute, PublicRoute } from 'components';
 
 import { history } from './history';
 
