@@ -4,10 +4,8 @@ import { Form } from 'react-final-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
+import { Input, Spinner, Button } from 'components';
 import { login } from 'actions/auth';
-
-import { Input } from 'components';
-import { Button } from 'components/controls/Button/Button';
 import { BUTTON_TYPE } from 'constants/buttonType';
 import { BUTTON_COLOR_TYPE } from 'constants/buttonColorType';
 import { onlyLatin, required } from 'validators/baseControlValidators';
@@ -37,11 +35,7 @@ export const LoginForm = ({ backMethod }) => {
         <form className="login-form" onSubmit={handleSubmit}>
           <fieldset className="field-set" disabled={isLoading}>
             {isLoading && (
-              <div className="spinner-wrapper">
-                <div className="spinner-border" role="status">
-                  <span className="sr-only">Loading...</span>
-                </div>
-              </div>
+              <Spinner />
             )}
             <Input
               name="username"
@@ -63,6 +57,7 @@ export const LoginForm = ({ backMethod }) => {
           <Button
             type={BUTTON_TYPE.submit}
             title={t('common.buttons.login')}
+            disabled={isLoading}
           />
           {backMethod && (
           <Button
@@ -70,6 +65,7 @@ export const LoginForm = ({ backMethod }) => {
             title={t('common.buttons.back')}
             colorType={BUTTON_COLOR_TYPE.brandSecondary}
             onClick={backMethod}
+            disabled={isLoading}
           />
           )}
         </form>

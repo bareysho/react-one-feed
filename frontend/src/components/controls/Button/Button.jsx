@@ -6,7 +6,7 @@ import { NavigationService } from 'navigation';
 import { BUTTON_TYPE } from 'constants/buttonType';
 import { BUTTON_COLOR_TYPE } from 'constants/buttonColorType';
 
-export const Button = ({ title, onClick, className, type, colorType, to }) => {
+export const Button = ({ title, onClick, className, type, colorType, to, disabled }) => {
   const buttonColorType = `btn-${colorType || BUTTON_COLOR_TYPE.brand}`;
 
   const classes = classNames('btn btn-block rounded', buttonColorType, className);
@@ -22,6 +22,7 @@ export const Button = ({ title, onClick, className, type, colorType, to }) => {
       type={type || BUTTON_TYPE.button}
       className={classes}
       onClick={handleOnClick}
+      disabled={disabled}
     >
       {title}
     </button>
@@ -29,6 +30,7 @@ export const Button = ({ title, onClick, className, type, colorType, to }) => {
 };
 
 Button.propTypes = {
+  disabled: PropTypes.bool,
   title: PropTypes.string,
   colorType: PropTypes.string,
   to: PropTypes.string,

@@ -16,8 +16,8 @@ const recallUser = (id) => {
   return apiInstance.get(`/api/user/${id}`);
 }
 
-const registration = (params) => {
-  return apiInstance.post('/auth/registration', params);
+const registration = ({ username, password, email }) => {
+  return apiInstance.post('/auth/registration', { username, password, email });
 };
 
 export const authApi = {
