@@ -5,6 +5,9 @@ const router = express.Router();
 const authService = require('services/auth.service');
 const refreshTokenService = require('services/refreshToken.service');
 const userService = require('services/user.service');
+const emailTokenService = require('services/emailToken.service');
+const { User } = require('database/mongoose');
+const { transporter } = require('config/nodemailer');
 
 const { authenticateJWT } = require('middlewares/authorize');
 const { authenticateLocal } = require('middlewares/authorize');
@@ -25,16 +28,20 @@ const setTokenCookie = (res, token) => {
 
 const validateRegistration = ({ username, email }) => {
   const errors = [];
+  const users = [];
 
   return userService.getUserByEmail(email)
     .then(user => {
-      if (user) errors.push(EMAIL_EXISTS);
+      if (user && user.verified) errors.push(EMAIL_EXISTS);
+      if (user && !user.verified) users.push(user);
     })
     .then(() => userService.getUserByUsername(username))
     .then(user => {
-      if (user) errors.push(USERNAME_EXISTS);
+      if (user && user.verified) errors.push(USERNAME_EXISTS);
+      if (user && !user.verified) users.push(user);
     })
-    .then(() => errors);
+    .then(() => ({ errors, users }))
+    .catch(() => ({ errors, users }));
 }
 
 const registration = (req, res, next) => {
@@ -42,22 +49,94 @@ const registration = (req, res, next) => {
   const { email, username, password } = req.body;
 
   return validateRegistration({ username, email})
-    .then((errors) => {
+    .then(({ errors, users }) => {
       if (errors.length) {
         res.status(400).json({ message: errors });
       } else {
-        return userService.createUser({ email, username, password })
-          .then(user => {
-            return authService.authenticate(user, ipAddress)
-              .then(({ refreshToken, ...user }) => {
-                setTokenCookie(res, refreshToken);
-                res.json(user);
+        console.log(users);
+
+        if (users.length) {
+          const user = users[0];
+
+          const newUser = new User({
+            username,
+            email,
+            role: ADMIN_ROLE,
+          })
+
+          newUser.setPassword(password)
+
+          return User.deleteOne({ _id: user.id })
+            .then(() => {
+              return newUser.save();
+            })
+            .then(user => {
+              console.log(user);
+              return emailTokenService.generateEmailToken(user)
+                .then(emailToken => {
+                  const result = transporter.sendMail({
+                    from: '"Node js" <nodejs@example.com>',
+                    to: email,
+                    subject: 'Message from Node js',
+                    html:
+                      `Code verification is: ${emailToken.token}`,
+                  })
+
+                  return user;
+                })
+            })
+            .then(user => {
+              res.json(user);
+            })
+        } else {
+          return userService.createUser({ email, username, password })
+            .then(user => {
+              console.log(user);
+              return emailTokenService.generateEmailToken(user)
+              .then(emailToken => {
+                const result = transporter.sendMail({
+                  from: '"Node js" <nodejs@example.com>',
+                  to: email,
+                  subject: 'Message from Node js',
+                  html:
+                    `Code verification is: ${emailToken.token}`,
+                })
+
+                return user;
               })
-              .catch(error => {
-                res.status(401).json({ message: error });
-              });
-        })
+            })
+            .then(user => {
+              res.json(user);
+            })
+        }
       }
+    })
+}
+
+const validateOtp = (req, res) => {
+  const ipAddress = req.ip;
+  const { otp, username } = req.body;
+
+  return userService.getUserByUsername(username)
+    .then(user => {
+      return emailTokenService.getEmailTokenByUserId(user._id)
+        .then(emailToken => {
+            if (emailToken.token === otp) {
+                return User.findOneAndUpdate({ username }, { verified: true })
+                  .then(user => {
+                    return authService.authenticate(user, ipAddress)
+                      .then(({ refreshToken, ...user }) => {
+                        setTokenCookie(res, refreshToken);
+                        res.json(user);
+                      })
+                      .catch(error => {
+                        res.status(401).json({ message: error });
+                      });
+                  })
+            } else {
+              res.status(403).json({ message: "INVALID_OTP" })
+            }
+        })
     })
 }
 
@@ -83,12 +162,12 @@ const refreshToken = (req, res, next) => {
 
   return (err, user) => {
     return refreshTokenService.refreshToken({ token, ipAddress })
-    .then(({ refreshToken, ...user }) => {
-      setTokenCookie(res, refreshToken);
+      .then(({ refreshToken, ...user }) => {
+        setTokenCookie(res, refreshToken);
 
-      res.json(user);
-    })
-    .catch(next);
+        res.json(user);
+      })
+      .catch(next);
   }
 }
 
@@ -120,6 +199,7 @@ const refreshTokens = (req, res, next) => {
 }
 
 router.post('/registration', registration);
+router.post('/validate-otp', validateOtp);
 router.post('/authenticate', authenticateLocal(authenticate));
 router.post('/refresh-token', authenticateJWT(refreshToken));
 
