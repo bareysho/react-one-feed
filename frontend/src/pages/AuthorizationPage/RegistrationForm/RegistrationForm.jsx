@@ -16,7 +16,7 @@ import { handleSubmitError } from './helper';
 
 import './RegistrationForm.scss';
 
-export const RegistrationForm = ({ backMethod }) => {
+export const RegistrationForm = ({ backMethod, setVerificationMode }) => {
   const { t } = useTranslation();
 
   const dispatch = useDispatch();
@@ -26,8 +26,8 @@ export const RegistrationForm = ({ backMethod }) => {
   const onSubmit = useCallback(async (credentials) => {
     const response = await dispatch(registration(credentials));
 
-    return handleSubmitError(response);
-  }, [dispatch]);
+    return handleSubmitError(response, setVerificationMode);
+  }, [dispatch, setVerificationMode]);
 
   return (
     <Form
@@ -90,8 +90,10 @@ export const RegistrationForm = ({ backMethod }) => {
 
 RegistrationForm.propTypes = {
   backMethod: PropTypes.func,
+  setVerificationMode: PropTypes.func,
 };
 
 RegistrationForm.defaultProps = {
   backMethod: undefined,
+  setVerificationMode: undefined,
 };
