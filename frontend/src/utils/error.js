@@ -1,9 +1,12 @@
 import { isStringType } from 'utils/checkType';
 
-export const getErrorsObject = (response, errorMapper) => {
+export const getErrorsObject = (response, errorMapper, successCallback) => {
   const { message: errors } = response;
 
   if (!errors) {
+    console.log('successCallback')
+    if (successCallback) successCallback();
+
     return undefined;
   }
 

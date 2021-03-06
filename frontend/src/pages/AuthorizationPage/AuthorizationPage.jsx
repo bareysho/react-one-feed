@@ -7,6 +7,7 @@ import { BUTTON_COLOR_TYPE } from 'constants/buttonColorType';
 
 import { LoginForm } from './LoginForm';
 import { RegistrationForm } from './RegistrationForm';
+import { VerificationForm } from './VerificationForm';
 
 import './AuthorizationPage.scss';
 
@@ -15,11 +16,15 @@ export const AuthorizationPage = () => {
 
   const [pageMode, setPageMode] = useState(LOGIN_PAGE_MODE.selectAuthMenu);
 
+  console.log(pageMode);
+
   const setLoginMode = useCallback(() => setPageMode(LOGIN_PAGE_MODE.login), []);
 
   const setRegistrationMode = useCallback(() => setPageMode(LOGIN_PAGE_MODE.registration), []);
 
   const setSelectAuthMenu = useCallback(() => setPageMode(LOGIN_PAGE_MODE.selectAuthMenu), []);
+
+  const setVerificationMode = useCallback(() => setPageMode(LOGIN_PAGE_MODE.verification), []);
 
   return (
     <div className="authorization">
@@ -52,8 +57,10 @@ export const AuthorizationPage = () => {
                     />
                   </div>
                   )}
+                  {pageMode === LOGIN_PAGE_MODE.verification && <VerificationForm backMethod={setRegistrationMode} />}
                   {pageMode === LOGIN_PAGE_MODE.login && <LoginForm backMethod={setSelectAuthMenu} />}
-                  {pageMode === LOGIN_PAGE_MODE.registration && <RegistrationForm backMethod={setSelectAuthMenu} />}
+                  {pageMode === LOGIN_PAGE_MODE.registration
+                    && <RegistrationForm backMethod={setSelectAuthMenu} setVerificationMode={setVerificationMode} />}
                 </div>
               </div>
             </div>

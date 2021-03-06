@@ -39,15 +39,27 @@ export const login = createAsyncThunk('@auth/login', async ({ username, password
   }
 });
 
+export const validateOtp = createAsyncThunk('@auth/validateOtp', async ({ id, otp }, { rejectWithValue }) => {
+  try {
+    await sleep(1500);
+
+    const { data } = await authApi.validateOtp({ id, otp });
+
+    localStorage.setItem(USER_KEY, JSON.stringify(data));
+
+    NavigationService.redirectTo('/home');
+
+    return data;
+  } catch (error) {
+    return rejectWithValue(error.response.data);
+  }
+});
+
 export const registration = createAsyncThunk('@auth/registration', async ({ username, password, email }, { rejectWithValue }) => {
   try {
     await sleep(1500);
 
     const { data } = await authApi.registration({ username, password, email });
-
-    localStorage.setItem(USER_KEY, JSON.stringify(data));
-
-    NavigationService.redirectTo('/home');
 
     return data;
   } catch (error) {
