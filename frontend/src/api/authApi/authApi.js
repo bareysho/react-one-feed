@@ -20,11 +20,16 @@ const registration = ({ username, password, email }) => {
   return apiInstance.post('/auth/registration', { username, password, email });
 };
 
+const validateOtp = ({ id, otp }) => {
+  return apiInstance.post('/auth/validate-otp', { id, otp }, { withCredentials: true });
+};
+
 export const authApi = {
   login,
   revokeToken,
   registration,
   recallUser,
   refreshToken,
+  validateOtp,
 }
 

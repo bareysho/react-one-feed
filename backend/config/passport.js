@@ -19,10 +19,6 @@ passport.use('local', new LocalStrategy({
     User.findOne({ username }, (err, user) => {
       if (err) { return done(err) }
 
-      console.log(username);
-      console.log(password);
-      console.log(user.validatePassword(password));
-
       if (!user || !user.validatePassword(password)) {
         return done(null, false, { message: INVALID_CREDENTIALS_ERROR });
       }
@@ -38,7 +34,6 @@ const jwtOptions = {
 };
 
 passport.use('jwt', new JwtStrategy(jwtOptions, (payload, done) => {
-  console.log(payload)
     User.findById(payload.id, (err, user) => {
       if (err) {
         return done(err)
