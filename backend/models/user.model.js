@@ -9,6 +9,7 @@ const userSchema = new Schema({
   passwordHash: { type: String, required: true },
   role: { type: String, required: true },
   salt: { type: String, required: true },
+  verified: { type: Boolean, default: false },
 });
 
 userSchema.methods.setPassword = function (password){
@@ -28,6 +29,7 @@ userSchema.set('toJSON', {
   transform: (doc, ret) => {
     delete ret._id;
     delete ret.passwordHash;
+    delete ret.salt;
   }
 });
 

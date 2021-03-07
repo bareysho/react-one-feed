@@ -7,12 +7,14 @@
           "login": "Войти",
           "registration": "Регистрация",
           "exploreFirst": "Сначала изучить",
+          "approve": "Подтвердить",
           "back": "Назад"
         },
         "fields": {
           "username": "Имя пользователя",
           "password": "Пароль",
           "confirmationPassword": "Подтверждение праоля",
+          "otp": "Код подтверждения",
           "email": "Email адрес"
         },
         "plural": {
@@ -29,7 +31,11 @@
         }
       },
       "requestErrors": {
-        "INVALID_CREDENTIALS_ERROR": "Неверное имя пользователя или пароль"
+        "INVALID_CREDENTIALS_ERROR": "Неверное имя пользователя или пароль",
+        "EMAIL_EXISTS": "Email уже зарегистрирован",
+        "INVALID_OTP": "Неверный код подтверждения",
+        "EXPIRED_OTP": "Устаревший код подтверждения",
+        "USERNAME_EXISTS": "Имя пользователя уже зарегистрировано"
       }
     }
   }

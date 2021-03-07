@@ -4,7 +4,11 @@ const login = ({ username, password }) => {
   return apiInstance.post('/auth/authenticate', { username, password }, { withCredentials: true });
 }
 
-const logout = () => {
+const refreshToken = () => {
+  return apiInstance.post('/auth/refresh-token', {}, { withCredentials: true });
+};
+
+const revokeToken = () => {
   return apiInstance.post('/auth/revoke-token', {}, { withCredentials: true });
 };
 
@@ -12,14 +16,20 @@ const recallUser = (id) => {
   return apiInstance.get(`/api/user/${id}`);
 }
 
-const registration = (params) => {
-  return apiInstance.post('/auth/registration', params);
+const registration = ({ username, password, email }) => {
+  return apiInstance.post('/auth/registration', { username, password, email });
+};
+
+const validateOtp = ({ id, otp }) => {
+  return apiInstance.post('/auth/validate-otp', { id, otp }, { withCredentials: true });
 };
 
 export const authApi = {
   login,
-  logout,
+  revokeToken,
   registration,
   recallUser,
+  refreshToken,
+  validateOtp,
 }
 

@@ -1,19 +1,14 @@
 import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { Form } from 'react-final-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
+import { AuthorizationForm, Input } from 'components';
 import { login } from 'actions/auth';
-
-import { Input } from 'components';
-import { Button } from 'components/controls/Button/Button';
-import { BUTTON_TYPE } from 'constants/buttonType';
-import { BUTTON_COLOR_TYPE } from 'constants/buttonColorType';
 import { onlyLatin, required } from 'validators/baseControlValidators';
-import { FORM_ERROR } from 'final-form';
-import { store } from 'store';
 import { getAuth } from 'selectors/auth';
+
+import { loginErrorMapper } from './loginErrorMapper';
 
 import './LoginForm.scss';
 
@@ -24,67 +19,33 @@ export const LoginForm = ({ backMethod }) => {
 
   const { isLoading } = useSelector(getAuth);
 
-  const onSubmit = useCallback(async (credentials) => {
-    await dispatch(login(credentials));
-
-    const { error } = store.getState().auth;
-
-    if (error) {
-      return {
-        username: ' ',
-        password: ' ',
-        [FORM_ERROR]: t(`requestErrors.${error}`),
-      };
-    }
-
-    return undefined;
-  }, [dispatch, t]);
+  const onSubmit = useCallback((credentials) => dispatch(login(credentials)), [dispatch]);
 
   return (
-    <Form
+    <AuthorizationForm
       onSubmit={onSubmit}
-      render={({ submitError, handleSubmit }) => (
-        <form className="login-form" onSubmit={handleSubmit}>
-          <fieldset className="field-set" disabled={isLoading}>
-            {isLoading && (
-              <div className="spinner-wrapper">
-                <div className="spinner-border" role="status">
-                  <span className="sr-only">Loading...</span>
-                </div>
-              </div>
-            )}
-            <Input
-              name="username"
-              label={t('common.fields.username')}
-              validators={[required, onlyLatin]}
-              maxLength={32}
-            />
-            <Input
-              name="password"
-              type="password"
-              className="password"
-              label={t('common.fields.password')}
-              validators={[required]}
-              maxLength={64}
-            />
-            {submitError && <small className="text-danger">{submitError}</small>}
-          </fieldset>
-          <br />
-          <Button
-            type={BUTTON_TYPE.submit}
-            title={t('common.buttons.login')}
-          />
-          {backMethod && (
-          <Button
-            type={BUTTON_TYPE.button}
-            title={t('common.buttons.back')}
-            colorType={BUTTON_COLOR_TYPE.brandSecondary}
-            onClick={backMethod}
-          />
-          )}
-        </form>
-      )}
-    />
+      className="login"
+      submitActionTitle={t('common.buttons.login')}
+      backActionTitle={t('common.buttons.back')}
+      isLoading={isLoading}
+      backMethod={backMethod}
+      submitErrorMapper={loginErrorMapper}
+    >
+      <Input
+        name="username"
+        label={t('common.fields.username')}
+        validators={[required, onlyLatin]}
+        maxLength={32}
+      />
+      <Input
+        name="password"
+        type="password"
+        className="password"
+        label={t('common.fields.password')}
+        validators={[required]}
+        maxLength={64}
+      />
+    </AuthorizationForm>
   );
 };
 

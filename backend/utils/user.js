@@ -1,6 +1,6 @@
 const basicDetails = (user) => {
-  const { id, firstName, lastName, username, role } = user;
-  return { id, firstName, lastName, username, role };
+  const { id, verified, username, email, role } = user;
+  return { id, verified, username, email, role };
 }
 
 module.exports = {
