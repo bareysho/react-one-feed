@@ -60,8 +60,7 @@ export const login = createAsyncThunk('@auth/login', async ({ username, password
 
     localStorage.setItem(USER_KEY, JSON.stringify(data));
 
-    NavigationService.redirectTo('/home');
-
+    NavigationService.navigateToHome();
 
     return data;
   } catch (error) {
@@ -78,7 +77,7 @@ export const verifyEmailVerificationCode = createAsyncThunk('@auth/verifyEmailVe
     localStorage.setItem(USER_KEY, JSON.stringify(data));
     localStorage.removeItem(REGISTRATION_CODE_RESEND_TIMER);
 
-    NavigationService.redirectTo('/home');
+    NavigationService.navigateToHome();
 
     return data;
   } catch (error) {

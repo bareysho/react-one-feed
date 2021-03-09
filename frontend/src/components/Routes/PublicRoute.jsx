@@ -12,7 +12,7 @@ export const PublicRoute = ({ component: Component = [], ...rest }) => {
     const { token } = getLocalStorageUser();
 
     if (token) {
-      NavigationService.redirectTo('/home');
+      NavigationService.navigateToHome();
     }
 
     setInitialized(true);
