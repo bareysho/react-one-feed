@@ -26,7 +26,7 @@ apiInstance.interceptors.response.use((response) => {
     localStorage.removeItem(USER_KEY);
 
     return Promise.resolve(() => {
-      return NavigationService.redirectTo('/')
+      return NavigationService.navigateToIndex();
     })
   }
 

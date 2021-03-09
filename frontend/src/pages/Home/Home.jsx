@@ -17,7 +17,7 @@ export const NavigationBar = () => {
   const handleLogout = useCallback(async () => {
     await dispatch(logout());
 
-    NavigationService.redirectTo('/');
+    NavigationService.navigateToIndex();
   }, [dispatch]);
 
   const GuestNav = (
