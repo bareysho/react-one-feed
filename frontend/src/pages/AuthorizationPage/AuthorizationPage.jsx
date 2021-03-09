@@ -6,7 +6,7 @@ import { useCountdown } from 'hooks/useCountdown';
 import { LOGIN_PAGE_MODE } from 'constants/loginPageMode';
 import { BUTTON_COLOR_TYPE } from 'constants/buttonColorType';
 import { OTP_TIMER_LIMIT } from 'constants/uiConstant';
-import { RECOVERY_CODE_RESEND_TIMER } from 'constants/timer';
+import { RECOVERY_CODE_RESEND_TIMER, REGISTRATION_CODE_RESEND_TIMER } from 'constants/timer';
 import { AUTHORIZATION_PAGE_MODE } from 'constants/localStorageItem';
 
 import { LoginForm } from './LoginForm';
@@ -21,7 +21,12 @@ import './AuthorizationPage.scss';
 export const AuthorizationPage = () => {
   const { t } = useTranslation();
 
-  const { start, time } = useCountdown(OTP_TIMER_LIMIT, RECOVERY_CODE_RESEND_TIMER);
+  const {
+    start: recoveryTimerStart, time: recoveryTimerTime,
+  } = useCountdown(OTP_TIMER_LIMIT, RECOVERY_CODE_RESEND_TIMER);
+  const {
+    start: registrationTimerStart, time: registrationTimerTime,
+  } = useCountdown(OTP_TIMER_LIMIT, REGISTRATION_CODE_RESEND_TIMER);
 
   const [pageMode, setPageMode] = useState(
     localStorage.getItem(AUTHORIZATION_PAGE_MODE) || LOGIN_PAGE_MODE.selectAuthMenu,
@@ -80,8 +85,8 @@ export const AuthorizationPage = () => {
                   )}
                   {pageMode === LOGIN_PAGE_MODE.verification && (
                   <VerificationForm
-                    startTimer={start}
-                    timeLeft={time}
+                    startTimer={registrationTimerStart}
+                    timeLeft={registrationTimerTime}
                     setRegistrationMode={setRegistrationMode}
                     setSelectAuthMenu={setSelectAuthMenu}
                   />
@@ -92,8 +97,8 @@ export const AuthorizationPage = () => {
                       backMethod={setLoginMode}
                       setSuccessMode={setSuccessMode}
                       setRecoveryVerificationMode={setRecoveryVerificationMode}
-                      startTimer={start}
-                      timeLeft={time}
+                      startTimer={recoveryTimerStart}
+                      timeLeft={recoveryTimerTime}
                     />
                     )}
                   {pageMode === LOGIN_PAGE_MODE.login
@@ -101,8 +106,8 @@ export const AuthorizationPage = () => {
                   {pageMode === LOGIN_PAGE_MODE.registration
                     && (
                     <RegistrationForm
-                      startTimer={start}
-                      timeLeft={time}
+                      startTimer={registrationTimerStart}
+                      timeLeft={registrationTimerTime}
                       backMethod={setSelectAuthMenu}
                       setVerificationMode={setVerificationMode}
                     />
@@ -111,8 +116,8 @@ export const AuthorizationPage = () => {
                     && (
                     <RequestRecoveryCodeForm
                       backMethod={setLoginMode}
-                      timeLeft={time}
-                      startTimer={start}
+                      timeLeft={recoveryTimerTime}
+                      startTimer={recoveryTimerStart}
                       setVerificationMode={setSetPasswordMode}
                     />
                     )}
