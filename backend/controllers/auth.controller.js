@@ -12,7 +12,6 @@ const { authenticateLocal } = require('middlewares/authorize');
 
 const { VERIFICATION } = require('constants/emailTokenType');
 const { TOKEN_REVOKED, TOKEN_EXPIRED, TOKEN_REQUIRED } = require('constants/message');
-const { ADMIN_ROLE } = require('constants/role');
 
 const { setTokenCookie, authenticate } = require('./authenticateCommon');
 
@@ -55,7 +54,7 @@ const revokeToken = (req, res, next) => {
 
   // users can revoke their own tokens and admins can revoke any tokens
   return (err, user) => {
-    if (!user.ownsToken(token) && user.role !== ADMIN_ROLE) {
+    if (!user.ownsToken(token)) {
       return res.status(401).json({ message: TOKEN_EXPIRED });
     }
 

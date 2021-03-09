@@ -12,6 +12,7 @@ const createTestUser = async () => {
       salt,
       username: 'bareysho',
       email: 'bareysho@gmail.com',
+      verified: true,
       passwordHash: crypto.pbkdf2Sync('553277', salt, 10000, 512, 'sha512').toString('hex'),
       role: ADMIN_ROLE,
     });

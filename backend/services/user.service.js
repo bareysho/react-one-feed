@@ -1,6 +1,6 @@
 const { User } = require('database/mongoose');
 
-const { ADMIN_ROLE } = require('constants/role');
+const { USER_ROLE } = require('constants/role');
 
 const userValidationService = require('services/userValidation.service');
 
@@ -10,7 +10,7 @@ const createUser = ({ password, username, email}) => {
   const user = new User({
     username,
     email,
-    role: ADMIN_ROLE,
+    role: USER_ROLE,
   })
 
   user.setPassword(password)
