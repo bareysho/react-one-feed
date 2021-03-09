@@ -1,7 +1,6 @@
 const { RefreshToken } = require('database/mongoose');
 
 const accessTokenService = require('services/accessToken.service');
-const userService = require('services/user.service');
 
 const { INVALID_REFRESH_TOKEN_ERROR } = require('constants/error');
 
@@ -17,13 +16,6 @@ const getRefreshToken = (token) => {
 
       return refreshToken;
     })
-}
-
-const getRefreshTokens = (userId) => {
-  // check that user exists
-  userService.isValidUserId(userId)
-
-  return RefreshToken.find({ user: userId })
 }
 
 const generateRefreshToken = (user, ipAddress) => {
@@ -74,6 +66,5 @@ const revokeToken = ({ token, ipAddress }) => {
 module.exports = {
   revokeToken,
   refreshToken,
-  getRefreshTokens,
   generateRefreshToken,
 }
