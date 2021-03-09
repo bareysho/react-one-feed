@@ -6,7 +6,7 @@ import { authApi } from 'api/authApi';
 import { getLocalStorageUser } from 'utils/localStorage';
 import { LOGIN_PAGE_MODE } from 'constants/loginPageMode';
 import { AUTHORIZATION_PAGE_MODE } from 'constants/localStorageItem';
-import { RECOVERY_CODE_RESEND_TIMER } from 'constants/timer';
+import { RECOVERY_CODE_RESEND_TIMER, REGISTRATION_CODE_RESEND_TIMER } from 'constants/timer';
 
 export const storeToken = (token) => {
   localStorage.setItem(USER_KEY, JSON.stringify(token));
@@ -76,7 +76,7 @@ export const verifyEmailVerificationCode = createAsyncThunk('@auth/verifyEmailVe
     const { data } = await authApi.verifyEmailVerificationCode({ id, otp });
 
     localStorage.setItem(USER_KEY, JSON.stringify(data));
-    localStorage.removeItem(RECOVERY_CODE_RESEND_TIMER);
+    localStorage.removeItem(REGISTRATION_CODE_RESEND_TIMER);
 
     NavigationService.redirectTo('/home');
 
