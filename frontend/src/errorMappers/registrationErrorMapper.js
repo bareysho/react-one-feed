@@ -1,6 +1,6 @@
 import i18n from 'resources/i18n';
 
-export const registrationErrorsMapper = {
+export const registrationErrorMapper = {
   ['EMAIL_EXISTS']: {
     email: i18n.t('requestErrors.EMAIL_EXISTS'),
   },

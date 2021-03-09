@@ -1,6 +1,6 @@
 import i18n from 'resources/i18n';
 
-export const verificationErrorsMapper = {
+export const verificationErrorMapper = {
   ['INVALID_OTP']: {
     otp: i18n.t('requestErrors.INVALID_OTP'),
   },
