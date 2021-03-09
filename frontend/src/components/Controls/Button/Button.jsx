@@ -6,10 +6,10 @@ import { NavigationService } from 'navigation';
 import { BUTTON_TYPE } from 'constants/buttonType';
 import { BUTTON_COLOR_TYPE } from 'constants/buttonColorType';
 
-export const Button = ({ title, onClick, className, type, colorType, to, disabled }) => {
+export const Button = ({ title, onClick, className, type, colorType, to, disabled, buttonBlock }) => {
   const buttonColorType = `btn-${colorType || BUTTON_COLOR_TYPE.brand}`;
 
-  const classes = classNames('btn btn-block rounded', buttonColorType, className);
+  const classes = classNames('btn rounded', { 'btn-block': buttonBlock }, buttonColorType, className);
 
   const handleOnClick = useCallback((...args) => {
     if (onClick) { onClick(args); }
@@ -31,10 +31,15 @@ export const Button = ({ title, onClick, className, type, colorType, to, disable
 
 Button.propTypes = {
   disabled: PropTypes.bool,
-  title: PropTypes.string,
+  title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   colorType: PropTypes.string,
   to: PropTypes.string,
   onClick: PropTypes.func,
   className: PropTypes.string,
+  buttonBlock: PropTypes.bool,
   type: PropTypes.oneOf(Object.values(BUTTON_TYPE)),
+};
+
+Button.defaultProps = {
+  buttonBlock: true,
 };

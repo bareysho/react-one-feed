@@ -3,16 +3,15 @@ import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
-import { AuthorizationForm, Input } from 'components';
+import { AuthorizationForm, Button, Input } from 'components';
 import { login } from 'actions/auth';
 import { onlyLatin, required } from 'validators/baseControlValidators';
 import { getAuth } from 'selectors/auth';
+import { BUTTON_COLOR_TYPE } from 'constants/buttonColorType';
 
-import { loginErrorMapper } from './loginErrorMapper';
+import { loginErrorMapper } from 'errorMappers/loginErrorMapper';
 
-import './LoginForm.scss';
-
-export const LoginForm = ({ backMethod }) => {
+export const LoginForm = ({ backMethod, forgetCallback }) => {
   const { t } = useTranslation();
 
   const dispatch = useDispatch();
@@ -27,6 +26,7 @@ export const LoginForm = ({ backMethod }) => {
       className="login"
       submitActionTitle={t('common.buttons.login')}
       backActionTitle={t('common.buttons.back')}
+      formTitle={t('pages.authorizationForm.loginForm.title')}
       isLoading={isLoading}
       backMethod={backMethod}
       submitErrorMapper={loginErrorMapper}
@@ -40,10 +40,17 @@ export const LoginForm = ({ backMethod }) => {
       <Input
         name="password"
         type="password"
-        className="password"
+        className="mb-1"
         label={t('common.fields.password')}
         validators={[required]}
         maxLength={64}
+      />
+      <Button
+        onClick={forgetCallback}
+        colorType={BUTTON_COLOR_TYPE.link}
+        className="d-block p-0"
+        buttonBlock={false}
+        title={<small>{t('common.buttons.forgetPassword')}</small>}
       />
     </AuthorizationForm>
   );
@@ -51,8 +58,10 @@ export const LoginForm = ({ backMethod }) => {
 
 LoginForm.propTypes = {
   backMethod: PropTypes.func,
+  forgetCallback: PropTypes.func,
 };
 
 LoginForm.defaultProps = {
   backMethod: undefined,
+  forgetCallback: undefined,
 };

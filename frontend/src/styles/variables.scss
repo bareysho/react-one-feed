@@ -2,5 +2,68 @@ $blue: #00b4e3;
 $red: #df150d;
 
 $gray: #666;
+$grey-dark: #333;
 $gray-light: #e3e1e1;
+
+$smallMobileScreen: 320px;
+$largeMobileScreen: 425px;
+$tabletBreakpoint: 768px;
+$smallMonitorBreakpoint: 992px;
+$largeMonitorBreakpoint: 1280px;
+
+$largestMobileScreen: ($tabletBreakpoint - 1px);
+$largestTabletScreen: ($smallMonitorBreakpoint - 1px);
+$largestSmallMonitor: ($largeMonitorBreakpoint - 1px);
+$desktopBreakpoint: ($tabletBreakpoint + 1px);
+
+@mixin device($device) {
+  // Small Mobile
+  @if $device == smallMobile {
+    @media only screen and (max-width: $smallMobileScreen) { @content; }
+  }
+  // Large Mobile
+  @if $device == largeMobileAndDown {
+    @media only screen and (max-width: $largeMobileScreen) { @content; }
+  }
+  @if $device == largeMobile {
+    @media only screen and (min-width: $smallMobileScreen) and (max-width: $largeMobileScreen) { @content; }
+  }
+  // Mobile
+  @if $device == mobile {
+    @media only screen and (max-width: $largestMobileScreen) { @content; }
+  }
+    // Largest Tablet
+  @if $device == largestTablet {
+    @media only screen and (min-width: $tabletBreakpoint) and (max-width: $largestTabletScreen) { @content; }
+  }
+    // Tablet
+  @if $device == tablet {
+    @media only screen and (min-width: $largeMobileScreen) and (max-width: $largestMobileScreen) { @content; }
+  }
+
+  @if $device == tabletAndUp {
+    @media only screen and (min-width: $tabletBreakpoint) { @content; }
+  }
+
+  @if $device == tabletAndDown {
+    @media only screen and (max-width: $largestTabletScreen) { @content; }
+  }
+    // Desktop
+  @if $device == desktop {
+    @media only screen and (min-width: $desktopBreakpoint) { @content; }
+  }
+    // Small Monitor
+  @if $device == smallMonitor {
+    @media only screen and (min-width: $smallMonitorBreakpoint) and (max-width: $largestSmallMonitor) { @content; }
+  }
+
+  @if $device == smallMonitorAndUp {
+    @media only screen and (min-width: $smallMonitorBreakpoint) { @content; }
+  }
+    // Large Monitor
+  @if $device == largeMonitor {
+    @media only screen and (min-width: $largeMonitorBreakpoint) { @content; }
+  }
+}
+
 
