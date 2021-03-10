@@ -1,18 +1,31 @@
 import axios from 'axios';
-import { USER_KEY } from 'constants/common';
+import { isProductionMode, USER_KEY } from 'constants/common';
 import { getLocalStorageUser } from 'utils/localStorage';
 import { authApi } from 'api/authApi';
 import { NavigationService } from 'navigation';
 
-const apiInstance = axios.create({
-  baseURL: 'http://192.168.1.2:3000',
+let axiosConfig = {
   timeout: 360000,
-});
+}
+
+if (!isProductionMode) {
+  axiosConfig = {
+    ...axiosConfig,
+    baseURL: 'http://192.168.1.2:3000',
+  }
+}
+
+const apiInstance = axios.create(axiosConfig);
 
 apiInstance.interceptors.request.use(config => {
-  const { token } = getLocalStorageUser();
 
-  config.headers['authorization'] = `bearer ${token}`;
+  if (!config.headers['authorization']) {
+    console.log('1234')
+    const { token } = getLocalStorageUser();
+
+    config.headers['authorization'] = `bearer ${token}`;
+  }
+
 
   return config;
 })

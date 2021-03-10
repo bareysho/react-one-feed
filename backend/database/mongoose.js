@@ -1,9 +1,8 @@
 const mongoose = require('mongoose');
-const { MONGO_URI } = require('../config');
 
 const connectionOptions = { useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false };
 
-mongoose.connect(MONGO_URI, connectionOptions);
+mongoose.connect(process.env.MONGO_URI, connectionOptions);
 mongoose.Promise = global.Promise;
 
 module.exports = {

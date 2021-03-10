@@ -5,8 +5,12 @@
   "main": "index.js",
   "scripts": {
     "start-client": "yarn --cwd ./frontend serve",
+    "build-client": "yarn --cwd ./frontend bundle",
     "start-server": "yarn --cwd ./backend start",
-    "start": "concurrently \"yarn start-client\" \"yarn start-server\""
+    "deploy-client": "rm -rf ./backend/public && mv ./frontend/build ./backend/public",
+    "start": "concurrently \"yarn start-client\" \"yarn start-server\"",
+    "start-prod-server": "yarn --cwd ./backend prodStart",
+    "startProduction": "yarn build-client && yarn deploy-client && yarn start-prod-server"
   },
   "author": "bareysho",
   "license": "ISC",

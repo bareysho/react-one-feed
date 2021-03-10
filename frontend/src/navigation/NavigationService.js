@@ -11,10 +11,10 @@ export class NavigationService {
   }
 
   static navigateToHome = () => {
-    this.redirectTo(`${ROUTES_PATHS.index}${ROUTES_PATHS.home}`)
+    this.redirectTo(`${ROUTES_PATHS.application}${ROUTES_PATHS.home}`)
   }
 
   static navigateToAdmin = () => {
-    this.redirectTo(`${ROUTES_PATHS.index}${ROUTES_PATHS.admin}`)
+    this.redirectTo(`${ROUTES_PATHS.admin}`)
   }
 }

@@ -1,4 +1,19 @@
+const fs = require('fs');
+const path = require('path');
+
 require('rootpath')();
+require('dotenv').config();
+
+const dotenv = require('dotenv');
+
+if (process.env.NODE_ENV === 'development') {
+  const envConfig = dotenv.parse(fs.readFileSync('.env.local'))
+
+  for (const k in envConfig) {
+    process.env[k] = envConfig[k]
+  }
+}
+
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -25,7 +40,14 @@ app.use(cors({ origin: (origin, callback) => callback(null, true), credentials: 
 
 app.use(cookieParser());
 app.use(passport.initialize())
+
+app.use('/static', express.static(path.join(__dirname, './public/static')));
+
 app.use(apiRouter);
+
+app.get('*', (req, res) => {
+  res.sendFile('index.html', {root: path.join(__dirname, './public/')});
+});
 
 app.use(errorHandler);
 
