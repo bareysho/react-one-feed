@@ -5,6 +5,7 @@
   "private": true,
   "proxy": "http://192.168.1.2:3000",
   "dependencies": {
+    "@reduxjs/toolkit": "^1.4.0",
     "axios": "^0.21.1",
     "bootstrap": "^4.6.0",
     "classnames": "^2.2.6",
@@ -29,10 +30,7 @@
     "redux-devtools-extension": "^2.13.8",
     "redux-thunk": "^2.3.0",
     "sass": "^1.32.8",
-    "use-timer": "^2.0.1"
-  },
-  "devDependencies": {
-    "@reduxjs/toolkit": "^1.4.0",
+    "use-timer": "^2.0.1",
     "babel-plugin-import": "^1.13.1",
     "eslint": "^7.21.0",
     "eslint-config-airbnb": "^18.2.1",

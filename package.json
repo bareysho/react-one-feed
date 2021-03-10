@@ -7,12 +7,12 @@
     "start-client": "yarn --cwd ./frontend serve",
     "build-client": "yarn --cwd ./frontend bundle",
     "start-server": "yarn --cwd ./backend start",
-    "deploy-client": "rm -rf ./backend/public && mv ./frontend/build ./backend/public",
-    "startDevelop": "concurrently \"yarn start-client\" \"yarn start-server\"",
-    "start-prod-server": "yarn --cwd ./backend prodStart",
-    "reinstall-dependencies": "yarn --cwd ./frontend && yarn --cwd ./backend",
+    "start": "concurrently \"yarn start-client\" \"yarn start-server\"",
     "clean-node-modules": "rm -rf ./backend/node_modules && rm -rf ./frontend/node_modules",
-    "start": "yarn clean-node-modules && yarn reinstall-dependencies && yarn build-client && yarn deploy-client && yarn start-prod-server"
+    "reinstall-dependencies": "yarn --cwd ./frontend && yarn --cwd ./backend",
+    "deploy-client": "rm -rf ./backend/public && mv ./frontend/build ./build",
+    "heroku-prebuild": "yarn clean-node-modules && yarn reinstall-dependencies",
+    "build": "yarn build-client && yarn deploy-client"
   },
   "author": "bareysho",
   "license": "ISC",
