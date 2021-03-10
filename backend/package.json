@@ -4,8 +4,7 @@
   "description": "Backend for react-one-feed project",
   "main": "server.js",
   "scripts": {
-    "start": "NODE_ENV=development nodemon server.js",
-    "prodStart": "NODE_ENV=production node server.js"
+    "start": "NODE_ENV=development nodemon server.js"
   },
   "author": "bareysho",
   "license": "ISC",

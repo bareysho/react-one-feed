@@ -41,12 +41,12 @@ app.use(cors({ origin: (origin, callback) => callback(null, true), credentials: 
 app.use(cookieParser());
 app.use(passport.initialize())
 
-app.use('/static', express.static(path.join(__dirname, './public/static')));
+app.use('/static', express.static(path.join(__dirname, '../build/static')));
 
 app.use(apiRouter);
 
 app.get('*', (req, res) => {
-  res.sendFile('index.html', {root: path.join(__dirname, './public/')});
+  res.sendFile('index.html', {root: path.join(__dirname, '../build/')});
 });
 
 app.use(errorHandler);
