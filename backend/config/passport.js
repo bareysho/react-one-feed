@@ -8,8 +8,6 @@ const { INVALID_CREDENTIALS_ERROR } = require('constants/error');
 
 const { User } = require('database/mongoose');
 
-const { SECRET_KEY } = require('../config');
-
 passport.use('local', new LocalStrategy({
     usernameField: 'username',
     passwordField: 'password',
@@ -30,7 +28,7 @@ passport.use('local', new LocalStrategy({
 
 const jwtOptions = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: SECRET_KEY
+  secretOrKey: process.env.SECRET_KEY
 };
 
 passport.use('jwt', new JwtStrategy(jwtOptions, (payload, done) => {
