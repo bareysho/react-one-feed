@@ -9,10 +9,14 @@
 /frontend/build
 
 /frontend/.env
+/frontend/.env.local
 
 /frontend/yarn-debug.log*
 /frontend/yarn-error.log*
 
 #BACKEND
 /backend/node_modules
+/backend/public
 /backend/config.js
+/backend/.env
+/backend/.env.local

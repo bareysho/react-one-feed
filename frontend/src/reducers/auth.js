@@ -82,6 +82,7 @@ export const authSlice = createSlice({
     builder.addCase(verifyPasswordRecoveryCode.rejected, setLoading(false));
     builder.addCase(recallUser.pending, setLoading(true));
     builder.addCase(recallUser.fulfilled, authenticateFulfilledReducer);
+    builder.addCase(logout.pending, setLoading(true));
     builder.addCase(logout.fulfilled, (state, action) => ({
       ...state,
       initialState,

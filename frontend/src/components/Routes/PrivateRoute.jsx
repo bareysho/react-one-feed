@@ -13,15 +13,15 @@ export const PrivateRoute = ({ component: Component, roles = [], ...rest }) => {
 
     const isRolesValid = !roles.length || roles.includes(role);
 
-    if (!isRolesValid) {
-      if (!token) {
-        NavigationService.navigateToIndex();
-      } else {
-        NavigationService.navigateToHome();
-      }
+    if (!token) {
+      return NavigationService.navigateToIndex();
     }
 
-    setInitialized(true);
+    if (!isRolesValid) {
+      return NavigationService.navigateToHome();
+    }
+
+    return setInitialized(true);
   }, [roles]);
 
   return (
