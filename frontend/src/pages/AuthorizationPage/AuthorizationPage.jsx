@@ -1,30 +1,56 @@
 import React, { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Button } from 'components/controls/Button/Button';
+import { Button } from 'components/Controls/Button/Button';
+import { useCountdown } from 'hooks/useCountdown';
 import { LOGIN_PAGE_MODE } from 'constants/loginPageMode';
 import { BUTTON_COLOR_TYPE } from 'constants/buttonColorType';
+import { OTP_TIMER_LIMIT } from 'constants/uiConstant';
+import { RECOVERY_CODE_RESEND_TIMER, REGISTRATION_CODE_RESEND_TIMER } from 'constants/timer';
+import { AUTHORIZATION_PAGE_MODE } from 'constants/localStorageItem';
 
 import { LoginForm } from './LoginForm';
 import { RegistrationForm } from './RegistrationForm';
 import { VerificationForm } from './VerificationForm';
+import { RequestRecoveryCodeForm } from './RequestRecoveryCodeForm';
+import { SetPasswordForm } from './SetPasswordForm';
+import { SuccessForm } from './SuccessForm';
 
 import './AuthorizationPage.scss';
 
 export const AuthorizationPage = () => {
   const { t } = useTranslation();
 
-  const [pageMode, setPageMode] = useState(LOGIN_PAGE_MODE.selectAuthMenu);
+  const {
+    start: recoveryTimerStart, time: recoveryTimerTime,
+  } = useCountdown(OTP_TIMER_LIMIT, RECOVERY_CODE_RESEND_TIMER);
+  const {
+    start: registrationTimerStart, time: registrationTimerTime,
+  } = useCountdown(OTP_TIMER_LIMIT, REGISTRATION_CODE_RESEND_TIMER);
 
-  console.log(pageMode);
+  const [pageMode, setPageMode] = useState(
+    localStorage.getItem(AUTHORIZATION_PAGE_MODE) || LOGIN_PAGE_MODE.selectAuthMenu,
+  );
 
-  const setLoginMode = useCallback(() => setPageMode(LOGIN_PAGE_MODE.login), []);
+  const handleSetPageMode = useCallback((nextPageMode) => {
+    setPageMode(nextPageMode);
+    localStorage.setItem(AUTHORIZATION_PAGE_MODE, nextPageMode);
+  }, []);
 
-  const setRegistrationMode = useCallback(() => setPageMode(LOGIN_PAGE_MODE.registration), []);
+  const setLoginMode = useCallback(() => handleSetPageMode(LOGIN_PAGE_MODE.login), [handleSetPageMode]);
 
-  const setSelectAuthMenu = useCallback(() => setPageMode(LOGIN_PAGE_MODE.selectAuthMenu), []);
+  const setRegistrationMode = useCallback(() => handleSetPageMode(LOGIN_PAGE_MODE.registration), [handleSetPageMode]);
 
-  const setVerificationMode = useCallback(() => setPageMode(LOGIN_PAGE_MODE.verification), []);
+  const setSelectAuthMenu = useCallback(() => handleSetPageMode(LOGIN_PAGE_MODE.selectAuthMenu), [handleSetPageMode]);
+
+  const setVerificationMode = useCallback(() => handleSetPageMode(LOGIN_PAGE_MODE.verification), [handleSetPageMode]);
+
+  const setRecoveryVerificationMode = useCallback(() => handleSetPageMode(LOGIN_PAGE_MODE.recoveryByEmail),
+    [handleSetPageMode]);
+
+  const setSetPasswordMode = useCallback(() => handleSetPageMode(LOGIN_PAGE_MODE.setPassword), [handleSetPageMode]);
+
+  const setSuccessMode = useCallback(() => handleSetPageMode(LOGIN_PAGE_MODE.success), [handleSetPageMode]);
 
   return (
     <div className="authorization">
@@ -57,10 +83,46 @@ export const AuthorizationPage = () => {
                     />
                   </div>
                   )}
-                  {pageMode === LOGIN_PAGE_MODE.verification && <VerificationForm backMethod={setRegistrationMode} />}
-                  {pageMode === LOGIN_PAGE_MODE.login && <LoginForm backMethod={setSelectAuthMenu} />}
+                  {pageMode === LOGIN_PAGE_MODE.verification && (
+                  <VerificationForm
+                    startTimer={registrationTimerStart}
+                    timeLeft={registrationTimerTime}
+                    setRegistrationMode={setRegistrationMode}
+                    setSelectAuthMenu={setSelectAuthMenu}
+                  />
+                  )}
+                  {pageMode === LOGIN_PAGE_MODE.setPassword
+                    && (
+                    <SetPasswordForm
+                      backMethod={setLoginMode}
+                      setSuccessMode={setSuccessMode}
+                      setRecoveryVerificationMode={setRecoveryVerificationMode}
+                      startTimer={recoveryTimerStart}
+                      timeLeft={recoveryTimerTime}
+                    />
+                    )}
+                  {pageMode === LOGIN_PAGE_MODE.login
+                    && <LoginForm backMethod={setSelectAuthMenu} forgetCallback={setRecoveryVerificationMode} />}
                   {pageMode === LOGIN_PAGE_MODE.registration
-                    && <RegistrationForm backMethod={setSelectAuthMenu} setVerificationMode={setVerificationMode} />}
+                    && (
+                    <RegistrationForm
+                      startTimer={registrationTimerStart}
+                      timeLeft={registrationTimerTime}
+                      backMethod={setSelectAuthMenu}
+                      setVerificationMode={setVerificationMode}
+                    />
+                    )}
+                  {pageMode === LOGIN_PAGE_MODE.recoveryByEmail
+                    && (
+                    <RequestRecoveryCodeForm
+                      backMethod={setLoginMode}
+                      timeLeft={recoveryTimerTime}
+                      startTimer={recoveryTimerStart}
+                      setVerificationMode={setSetPasswordMode}
+                    />
+                    )}
+                  {pageMode === LOGIN_PAGE_MODE.success
+                    && <SuccessForm backMethod={setLoginMode} setLoginMode={setLoginMode} />}
                 </div>
               </div>
             </div>

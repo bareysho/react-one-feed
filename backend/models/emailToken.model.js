@@ -5,6 +5,7 @@ const emailTokenSchema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: 'User' },
   token: String,
   expires: Date,
+  type: { type: Number, required: true },
   created: { type: Date, default: Date.now },
 });
 
@@ -15,6 +16,7 @@ emailTokenSchema.set('toJSON', {
   versionKey: false,
   transform: (doc, ret) => {
     // remove these props when object is serialized
+    delete ret.type
     delete ret._id;
     delete ret.id;
     delete ret.user;

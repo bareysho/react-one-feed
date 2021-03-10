@@ -14,7 +14,7 @@ export const Navigation = () => {
     <Router history={history}>
       <Switch>
         <PublicRoute component={AuthorizationPage} path={ROUTES_PATHS.index} exact />
-        <PrivateRoute component={NavigationBar} roles={['ADMIN']} path={ROUTES_PATHS.home} />
+        <PrivateRoute component={NavigationBar} path={`${ROUTES_PATHS.application}${ROUTES_PATHS.home}`} />
       </Switch>
     </Router>
   );

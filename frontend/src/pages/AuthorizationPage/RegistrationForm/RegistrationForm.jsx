@@ -1,17 +1,18 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
-import { AuthorizationForm, Input } from 'components';
+import { AuthorizationForm, CodeVerificationInfo, Input } from 'components';
 import { registration } from 'actions/auth';
 import { getAuth } from 'selectors/auth';
 import { minLength, onlyLatin, required, validateEmail } from 'validators/baseControlValidators';
 import { registrationPasswordsValidate } from 'validators/authorizationPageValidators';
 
-import { registrationErrorsMapper } from './registrationErrorsMapper';
+import { registrationErrorMapper } from 'errorMappers/registrationErrorMapper';
+import { REQUESTED_OTP_EMAIL } from 'constants/localStorageItem';
 
-export const RegistrationForm = ({ backMethod, setVerificationMode }) => {
+export const RegistrationForm = ({ backMethod, setVerificationMode, startTimer, timeLeft }) => {
   const { t } = useTranslation();
 
   const dispatch = useDispatch();
@@ -20,16 +21,26 @@ export const RegistrationForm = ({ backMethod, setVerificationMode }) => {
 
   const onSubmit = useCallback((credentials) => dispatch(registration(credentials)), [dispatch]);
 
+  const onSuccessCallback = useCallback(({ email }) => {
+    localStorage.setItem(REQUESTED_OTP_EMAIL, email);
+    startTimer();
+    setVerificationMode();
+  }, [setVerificationMode, startTimer]);
+
+  const isTimerActive = useMemo(() => Boolean(timeLeft), [timeLeft]);
+
   return (
     <AuthorizationForm
       onSubmit={onSubmit}
       className="registration"
       submitActionTitle={t('common.buttons.registration')}
       backActionTitle={t('common.buttons.back')}
+      formTitle={t('pages.authorizationForm.registrationForm.title')}
       isLoading={isLoading}
       backMethod={backMethod}
-      submitErrorMapper={registrationErrorsMapper}
-      successSubmitCallback={setVerificationMode}
+      submitButtonDisabled={isTimerActive}
+      submitErrorMapper={registrationErrorMapper}
+      successSubmitCallback={onSuccessCallback}
       validate={registrationPasswordsValidate}
     >
       <Input
@@ -59,6 +70,7 @@ export const RegistrationForm = ({ backMethod, setVerificationMode }) => {
         label={t('common.fields.confirmationPassword')}
         maxLength={64}
       />
+      <CodeVerificationInfo timeLeft={timeLeft} />
     </AuthorizationForm>
   );
 };
@@ -66,6 +78,8 @@ export const RegistrationForm = ({ backMethod, setVerificationMode }) => {
 RegistrationForm.propTypes = {
   backMethod: PropTypes.func,
   setVerificationMode: PropTypes.func,
+  startTimer: PropTypes.func,
+  timeLeft: PropTypes.number,
 };
 
 RegistrationForm.defaultProps = {

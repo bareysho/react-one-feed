@@ -20,9 +20,17 @@ const registration = ({ username, password, email }) => {
   return apiInstance.post('/auth/registration', { username, password, email });
 };
 
-const validateOtp = ({ id, otp }) => {
-  return apiInstance.post('/auth/validate-otp', { id, otp }, { withCredentials: true });
+const requestEmailCode = ({ email, type }) => {
+  return apiInstance.post('/auth/request-email-code', { email, type })
+}
+
+const verifyEmailVerificationCode = ({ id, otp }) => {
+  return apiInstance.post('/auth/verify-email-verification-code', { id, otp }, { withCredentials: true });
 };
+
+const verifyRecoveryPasswordCode = ({ id, password, otp }) => {
+  return apiInstance.post('/auth/verify-recovery-password-code', { id, password, otp })
+}
 
 export const authApi = {
   login,
@@ -30,6 +38,8 @@ export const authApi = {
   registration,
   recallUser,
   refreshToken,
-  validateOtp,
+  verifyEmailVerificationCode,
+  requestEmailCode,
+  verifyRecoveryPasswordCode,
 }
 

@@ -8,7 +8,13 @@
           "registration": "Регистрация",
           "exploreFirst": "Сначала изучить",
           "approve": "Подтвердить",
-          "back": "Назад"
+          "forgetPassword": "Забыли пароль?",
+          "retrySending": "Повторить отправку",
+          "changeEmail": "Изменить email",
+          "send": "Отправить",
+          "back": "Назад",
+          "cancel": "Отменить",
+          "cancellation": "Отмена"
         },
         "fields": {
           "username": "Имя пользователя",
@@ -35,7 +41,42 @@
         "EMAIL_EXISTS": "Email уже зарегистрирован",
         "INVALID_OTP": "Неверный код подтверждения",
         "EXPIRED_OTP": "Устаревший код подтверждения",
+        "USER_NOT_FOUND": "Пользватель не найден",
         "USERNAME_EXISTS": "Имя пользователя уже зарегистрировано"
+      },
+      "components": {
+        "retryCountdown": {
+          "retryIn": "Код отправлен, повтор через: {{timeLeft}}",
+          "sentTo": "Код подтверждения отправлен на {{recoveryEmail}}"
+        },
+        "retryCountdownWithoutButton": {
+          "retryIn": "Проверочный код ранее уже был отправлен, повтор будет доступен через: {{timeLeft}}"
+        },
+        "codeVerificationInfo": {
+          "emailBeSent": "Мы отправим проверочный код на введенный email адрес."
+        }
+      },
+      "pages": {
+        "authorizationForm": {
+          "successForm": {
+            "passwordChanged": "Пароль успешно установлен"
+          },
+          "requestRecoveryCodeForm": {
+            "title": "Восстановление"
+          },
+          "setPasswordCode": {
+            "title": "Новый пароль"
+          },
+          "verificationForm": {
+            "title": "Подтверждение"
+          },
+          "registrationForm": {
+            "title": "Регистрация"
+          },
+          "loginForm": {
+            "title": "Войти"
+          }
+        }
       }
     }
   }

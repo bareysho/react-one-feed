@@ -6,26 +6,18 @@ const userService = require('services/user.service');
 
 const { authenticateJWT } = require('middlewares/authorize');
 
-const { ADMIN_ROLE } = require('constants/role');
+const getById = (req, res) => {
+  const { params } = req;
 
-const getAll = (req, res, next) => {
   return () => {
-    return userService.getAll()
-    .then(users => res.json(users))
-    .catch(next);
+    return userService.getUserById(params.id)
+      .then(user =>{ res.json(user) })
+      .catch(error => {
+        res.sendStatus(404).json({ message: error });
+      });
   }
 }
 
-
-const getById = (req, res, next) => {
-  return () => {
-    return userService.getById(req.params.id)
-      .then(user => user ? res.json(user) : res.sendStatus(404))
-      .catch(next);
-  }
-}
-
-router.get('/', authenticateJWT(getAll, ADMIN_ROLE));
 router.get('/:id', authenticateJWT(getById));
 
 module.exports = router;
