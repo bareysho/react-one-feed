@@ -10,6 +10,7 @@ import {
   verifyPasswordRecoveryCode
 } from 'actions/auth';
 import { USER_KEY } from 'constants/common';
+import { setLoading } from 'reducers/common';
 
 export const getUserFromLS = () => {
   const userData = localStorage.getItem(USER_KEY) || '';
@@ -45,11 +46,6 @@ const authenticateFulfilledReducer = (state, action) => {
     isAuthenticated: true,
   });
 };
-
-const setLoading = (value) => (state) => ({
-  ...state,
-  isLoading: value,
-})
 
 export const authSlice = createSlice({
   extraReducers: (builder) => {

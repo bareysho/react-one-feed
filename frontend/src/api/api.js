@@ -11,21 +11,18 @@ let axiosConfig = {
 if (!isProductionMode) {
   axiosConfig = {
     ...axiosConfig,
-    baseURL: 'http://192.168.1.2:3000',
+    baseURL: 'http://localhost:3000',
   }
 }
 
 const apiInstance = axios.create(axiosConfig);
 
 apiInstance.interceptors.request.use(config => {
-
   if (!config.headers['authorization']) {
-    console.log('1234')
     const { token } = getLocalStorageUser();
 
     config.headers['authorization'] = `bearer ${token}`;
   }
-
 
   return config;
 })
@@ -35,7 +32,7 @@ apiInstance.interceptors.response.use((response) => {
 }, async (error) => {
 
   // Logout if refresh token expired
-  if(error.response.status === 500 && error.response.data.error.message === 'INVALID_REFRESH_TOKEN_ERROR') {
+  if(error.response.status === 400 && error.response.data.error.message === 'INVALID_REFRESH_TOKEN_ERROR') {
     localStorage.removeItem(USER_KEY);
 
     return Promise.resolve(() => {

@@ -1,0 +1,40 @@
+@import "styles/variables";
+
+.dropdown {
+  .input-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .input-group-append {
+    position: absolute;
+    right: 10px;
+  }
+
+  select.custom-select {
+    .is-placeholder {
+      display: none;
+    }
+  }
+
+  &:not(.hasValue) {
+    select.custom-select {
+      color: $gray-light-2;
+
+      &.is-invalid {
+        color: $red;
+      }
+
+      option {
+        color: $grey-dark;
+      }
+    }
+  }
+
+  &.isLoading {
+    .custom-select {
+      background-image: none;
+    }
+  }
+}
