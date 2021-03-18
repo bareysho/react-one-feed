@@ -1,1 +1,0 @@
-export { SuccessForm } from './SuccessFrom';

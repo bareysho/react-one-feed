@@ -1,33 +1,53 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { Spinner } from 'components/Spinner';
-import { linkedAccountType } from 'propTypes/linkedAccountType';
+import { useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { Button } from 'react-bootstrap';
+import { SpinnerWrapper } from 'components/SpinnerWrapper';
+import { linkedAccountType } from 'propTypes/linkedAccountType';
+import { ConfirmationModal } from 'components/ConfirmationModal/ConfirmationModal';
+import { deleteLinkedAccount } from 'actions/linkedAccounts';
+
+import { AccountBodyField } from './AccountBodyField';
 
 import './AccountCardBody.scss';
 
 export const AccountCardBody = ({ linkedAccount, id }) => {
-  const { isLoading, email, userBalances = [] } = linkedAccount;
+  const { t } = useTranslation();
+
+  const dispatch = useDispatch();
+
+  const { isLoading, email, userBalances = [], type } = linkedAccount;
+
+  const handleDeleteAccount = useCallback(() => {
+    dispatch(deleteLinkedAccount({ id, type }));
+  }, [dispatch, id, type]);
 
   return isLoading
-    ? <Spinner />
+    ? <SpinnerWrapper size={60} />
     : (
       <div className="account-body">
         <div className="account-info">
-          {id && <p><small>{`ID: ${id}`}</small></p>}
-          {email && <p><small>{`Email: ${email}`}</small></p>}
+          {id && <AccountBodyField fieldName="id" values={{ id }} />}
+          {email && <AccountBodyField fieldName="email" values={{ email }} />}
           <div>
             {userBalances.map(({ currency, availableAmount, holdAmount }) => {
               return (
                 <Fragment key={`{${id}${currency}`}>
-                  <p><small>{`Доступно ${currency}: ${availableAmount}`}</small></p>
-                  <p><small>{`Холд ${currency}: ${holdAmount}`}</small></p>
+                  <AccountBodyField fieldName="balance" values={{ currency, value: availableAmount }} />
+                  <AccountBodyField fieldName="balance" values={{ currency, value: holdAmount }} />
                 </Fragment>
               );
             })}
           </div>
         </div>
-        <Button>Отключить</Button>
+        <ConfirmationModal
+          modalTitle={t('components.disableAccountModal.title')}
+          onConfirmCallback={handleDeleteAccount}
+          description={t('components.disableAccountModal.description')}
+        >
+          <Button className="auto-width">{t('common.buttons.disable')}</Button>
+        </ConfirmationModal>
       </div>
     );
 };

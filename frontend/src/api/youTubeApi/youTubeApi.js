@@ -20,10 +20,6 @@ const cancelConvertVideo = ({ downloadUrl }) => {
   return apiInstance.post('/api/you-tube/convert-cancel',{ downloadUrl }, { withCredentials: true });
 };
 
-const getCreds = () => {
-  return apiInstance.get('/api/you-tube/get-credentials', { withCredentials: true });
-};
-
 const downloadVideo = ({ downloadUrl }, onDownloadProgress) => {
   return apiInstance.get('/api/you-tube/download-video',{
     responseType: 'blob',
@@ -40,5 +36,4 @@ export const youTubeApi = {
   downloadVideo,
   convertVideo,
   cancelConvertVideo,
-  getCreds,
 }

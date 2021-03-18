@@ -44,13 +44,3 @@ export const downloadConvertedVideo = createAsyncThunk('@youtube/downloadVideo',
       return rejectWithValue(error.response.data);
     }
   });
-
-
-export const getCreds = createAsyncThunk('@youtube/getCreds',
-  async (_, { rejectWithValue }) => {
-    try {
-      const { data } = await youTubeApi.getCreds();
-    } catch (error) {
-      return rejectWithValue(error.response.data);
-    }
-  });

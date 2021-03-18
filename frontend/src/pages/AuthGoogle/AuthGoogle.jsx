@@ -3,8 +3,10 @@ import PropTypes from 'prop-types';
 import queryString from 'query-string';
 import { useDispatch } from 'react-redux';
 
-import socket from 'api/socket';
+import { SpinnerWrapper } from 'components';
 import { linkYouTubeAccount } from 'actions/youTube';
+
+import socket from 'api/socket';
 
 export const AuthGoogle = ({ location: { search } }) => {
   const dispatch = useDispatch();
@@ -12,9 +14,9 @@ export const AuthGoogle = ({ location: { search } }) => {
   const [accountLinked, setAccountLinked] = useState(false);
 
   const linkGoogleAccount = useCallback(async () => {
-    const { code, profile } = queryString.parse(search);
+    const { code } = queryString.parse(search);
 
-    await dispatch(linkYouTubeAccount({ code, profile }));
+    await dispatch(linkYouTubeAccount({ code }));
     await socket.emit('online');
 
     setAccountLinked(true);
@@ -31,7 +33,7 @@ export const AuthGoogle = ({ location: { search } }) => {
   }, [accountLinked]);
 
   return (
-    <div>Successful, closing...</div>
+    <div><SpinnerWrapper /></div>
   );
 };
 

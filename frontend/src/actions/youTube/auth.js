@@ -2,9 +2,9 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { youTubeApi } from 'api/youTubeApi';
 
 export const linkYouTubeAccount = createAsyncThunk('@epnAuth/linkYouTubeAccount',
-  async ({ code, profile }, { rejectWithValue }) => {
+  async ({ code }, { rejectWithValue }) => {
     try {
-      const { data } = await youTubeApi.linkYouTubeAccount({ code, profile });
+      const { data } = await youTubeApi.linkYouTubeAccount({ code });
 
       return data;
     } catch (error) {

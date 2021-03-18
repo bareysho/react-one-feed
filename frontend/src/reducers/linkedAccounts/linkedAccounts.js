@@ -1,11 +1,20 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchLinkedAccount, getLinkedAccounts } from 'actions/linkedAccounts';
+import { deleteLinkedAccount, fetchLinkedAccount, getLinkedAccounts } from 'actions/linkedAccounts';
 import { linkEpnAccount } from 'actions/epn';
 
 export const initialState = {
   linkedAccounts: [],
   linkedAccountsIds: []
 };
+
+const unsetLoadingLinkedAccount = (id) => (state, action) => {
+  const { linkedAccounts } = state;
+
+  return ({
+    ...state,
+    linkedAccounts: { ...linkedAccounts, [id || action.meta.arg.id]: { isLoading: false, type: action.meta.arg.type } },
+  })
+}
 
 const pendingFetchLinkedAccount = (id) => (state, action) => {
   const { linkedAccounts } = state;
@@ -54,6 +63,15 @@ const fulfilledAddEpnAccount = (state, action) => fulfilledFetchLinkedAccount(ac
 
 export const linkedAccountsSlice = createSlice({
   extraReducers: (builder) => {
+    builder.addCase(deleteLinkedAccount.pending, pendingFetchLinkedAccount());
+    builder.addCase(deleteLinkedAccount.rejected, unsetLoadingLinkedAccount());
+    builder.addCase(deleteLinkedAccount.fulfilled, (state, action) => {
+      return ({
+        ...state,
+        ...rejectedFetchLinkedAccount()(state, action),
+        linkedAccountsIds: state.linkedAccountsIds.filter(account => account.id !== action.meta.arg.id),
+      })
+    });
     builder.addCase(fetchLinkedAccount.pending, pendingFetchLinkedAccount());
     builder.addCase(fetchLinkedAccount.fulfilled, fulfilledFetchLinkedAccount());
     builder.addCase(fetchLinkedAccount.rejected, rejectedFetchLinkedAccount());

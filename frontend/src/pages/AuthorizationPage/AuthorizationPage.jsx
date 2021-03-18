@@ -1,32 +1,21 @@
-import React, { useState, useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
-import { Button } from 'components/Controls/Button/Button';
-import { useCountdown } from 'hooks/useCountdown';
 import { LOGIN_PAGE_MODE } from 'constants/loginPageMode';
-import { BUTTON_COLOR_TYPE } from 'constants/buttonColorType';
-import { OTP_TIMER_LIMIT } from 'constants/uiConstant';
-import { RECOVERY_CODE_RESEND_TIMER, REGISTRATION_CODE_RESEND_TIMER } from 'constants/timer';
 import { AUTHORIZATION_PAGE_MODE } from 'constants/localStorageItem';
+import { getAuth } from 'selectors/auth';
 
-import { LoginForm } from './LoginForm';
-import { RegistrationForm } from './RegistrationForm';
-import { VerificationForm } from './VerificationForm';
-import { RequestRecoveryCodeForm } from './RequestRecoveryCodeForm';
-import { SetPasswordForm } from './SetPasswordForm';
-import { SuccessForm } from './SuccessForm';
+import { Login } from './Login/Login';
+import { SelectAuth } from './SelectAuth/SelectAuth';
+import { Registration } from './Registration/Registration';
 
 import './AuthorizationPage.scss';
 
 export const AuthorizationPage = () => {
   const { t } = useTranslation();
 
-  const {
-    start: recoveryTimerStart, time: recoveryTimerTime,
-  } = useCountdown(OTP_TIMER_LIMIT, RECOVERY_CODE_RESEND_TIMER);
-  const {
-    start: registrationTimerStart, time: registrationTimerTime,
-  } = useCountdown(OTP_TIMER_LIMIT, REGISTRATION_CODE_RESEND_TIMER);
+  const { isLoading } = useSelector(getAuth);
 
   const [pageMode, setPageMode] = useState(
     localStorage.getItem(AUTHORIZATION_PAGE_MODE) || LOGIN_PAGE_MODE.selectAuthMenu,
@@ -37,20 +26,11 @@ export const AuthorizationPage = () => {
     localStorage.setItem(AUTHORIZATION_PAGE_MODE, nextPageMode);
   }, []);
 
-  const setLoginMode = useCallback(() => handleSetPageMode(LOGIN_PAGE_MODE.login), [handleSetPageMode]);
+  const setLoginPage = useCallback(() => handleSetPageMode(LOGIN_PAGE_MODE.login), [handleSetPageMode]);
 
-  const setRegistrationMode = useCallback(() => handleSetPageMode(LOGIN_PAGE_MODE.registration), [handleSetPageMode]);
+  const setRegistrationPage = useCallback(() => handleSetPageMode(LOGIN_PAGE_MODE.registration), [handleSetPageMode]);
 
-  const setSelectAuthMenu = useCallback(() => handleSetPageMode(LOGIN_PAGE_MODE.selectAuthMenu), [handleSetPageMode]);
-
-  const setVerificationMode = useCallback(() => handleSetPageMode(LOGIN_PAGE_MODE.verification), [handleSetPageMode]);
-
-  const setRecoveryVerificationMode = useCallback(() => handleSetPageMode(LOGIN_PAGE_MODE.recoveryByEmail),
-    [handleSetPageMode]);
-
-  const setSetPasswordMode = useCallback(() => handleSetPageMode(LOGIN_PAGE_MODE.setPassword), [handleSetPageMode]);
-
-  const setSuccessMode = useCallback(() => handleSetPageMode(LOGIN_PAGE_MODE.success), [handleSetPageMode]);
+  const setSelectAuthPage = useCallback(() => handleSetPageMode(LOGIN_PAGE_MODE.selectAuthMenu), [handleSetPageMode]);
 
   return (
     <div className="authorization">
@@ -64,65 +44,14 @@ export const AuthorizationPage = () => {
               <div className="card">
                 <div className="card-body">
                   {pageMode === LOGIN_PAGE_MODE.selectAuthMenu && (
-                  <div>
-                    <Button
-                      title={t('common.buttons.registration')}
-                      colorType={BUTTON_COLOR_TYPE.outlineBrand}
-                      onClick={setRegistrationMode}
-                    />
-                    <Button
-                      title={t('common.buttons.login')}
-                      colorType={BUTTON_COLOR_TYPE.brand}
-                      onClick={setLoginMode}
-                    />
-                    <hr />
-                    <Button
-                      title={t('common.buttons.exploreFirst')}
-                      to="/explore"
-                      colorType={BUTTON_COLOR_TYPE.brandSecondary}
-                    />
-                  </div>
+                    <SelectAuth setLoginPage={setLoginPage} setRegistrationPage={setRegistrationPage} />
                   )}
-                  {pageMode === LOGIN_PAGE_MODE.verification && (
-                  <VerificationForm
-                    startTimer={registrationTimerStart}
-                    timeLeft={registrationTimerTime}
-                    setRegistrationMode={setRegistrationMode}
-                    setSelectAuthMenu={setSelectAuthMenu}
-                  />
+                  {pageMode === LOGIN_PAGE_MODE.login && (
+                    <Login setPreviousPage={setSelectAuthPage} isLoading={isLoading} />
                   )}
-                  {pageMode === LOGIN_PAGE_MODE.setPassword
-                    && (
-                    <SetPasswordForm
-                      backMethod={setLoginMode}
-                      setSuccessMode={setSuccessMode}
-                      setRecoveryVerificationMode={setRecoveryVerificationMode}
-                      startTimer={recoveryTimerStart}
-                      timeLeft={recoveryTimerTime}
-                    />
-                    )}
-                  {pageMode === LOGIN_PAGE_MODE.login
-                    && <LoginForm backMethod={setSelectAuthMenu} forgetCallback={setRecoveryVerificationMode} />}
-                  {pageMode === LOGIN_PAGE_MODE.registration
-                    && (
-                    <RegistrationForm
-                      startTimer={registrationTimerStart}
-                      timeLeft={registrationTimerTime}
-                      backMethod={setSelectAuthMenu}
-                      setVerificationMode={setVerificationMode}
-                    />
-                    )}
-                  {pageMode === LOGIN_PAGE_MODE.recoveryByEmail
-                    && (
-                    <RequestRecoveryCodeForm
-                      backMethod={setLoginMode}
-                      timeLeft={recoveryTimerTime}
-                      startTimer={recoveryTimerStart}
-                      setVerificationMode={setSetPasswordMode}
-                    />
-                    )}
-                  {pageMode === LOGIN_PAGE_MODE.success
-                    && <SuccessForm backMethod={setLoginMode} setLoginMode={setLoginMode} />}
+                  {pageMode === LOGIN_PAGE_MODE.registration && (
+                    <Registration setPreviousPage={setSelectAuthPage} isLoading={isLoading} />
+                  )}
                 </div>
               </div>
             </div>
