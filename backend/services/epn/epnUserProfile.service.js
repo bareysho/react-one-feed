@@ -6,6 +6,9 @@ const { getProfileUserSsid } = require('./modules/getUserProfileSsid');
 const { getUserProfileCredentials } = require('./modules/getUserProfileCredentials');
 const { createCreative } = require('./modules/createCreative');
 const { getShortLink } = require('./modules/getShortLink');
+const { refreshTokens } = require('./modules/refreshToken');
+const { getCreatives } = require('./modules/getCreatives');
+const { getDomainCutters } = require('./modules/getDomainCutters');
 
 const createUser = (epnUserProfile) => {
   const { user: authenticatedUserId, accountId } = epnUserProfile;
@@ -38,6 +41,10 @@ const getUserProfileById = (accountId, userId) => {
   return EpnUser.findOne({ user: userId, accountId });
 }
 
+const deleteUserProfile = (accountId, userId) => {
+  return EpnUser.deleteOne({ user: userId, accountId });
+}
+
 module.exports = {
   createUser,
   saveUserProfileWithCredentials,
@@ -50,4 +57,8 @@ module.exports = {
   getShortLink,
   getUserProfileIdsByUser,
   getUserProfileById,
+  refreshTokens,
+  getCreatives,
+  getDomainCutters,
+  deleteUserProfile,
 }

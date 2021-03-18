@@ -28,13 +28,11 @@ const createTestUser = require('utils/createTestUser');
 createTestUser();
 
 const app = express();
-const http = require('http').Server(app);
 
-const io = require('socket.io')(http, {
-  cors: {
-    origin: '*',
-  }
-});
+const http = require('http').Server(app);
+const socketIO = require('socket.io');
+
+const io = socketIO(http, { cors: { origin: '*' } });
 
 const PORT = process.env.PORT || 3000;
 
@@ -66,6 +64,8 @@ app.get('*', (req, res) => {
 });
 
 app.use(errorHandler);
+
+module.exports.ioObject = io;
 
 http.listen(PORT, () => {
   console.log(`Backend starts on PORT ${PORT}`)

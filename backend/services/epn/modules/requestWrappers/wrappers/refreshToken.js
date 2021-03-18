@@ -1,5 +1,5 @@
 const authInstance = require('../apiInstances/authInstance');
-const { WEB_CLIENT_ID, GRANT_TYPE_REFRESH_TOKEN, X_API_VERSION } = require('../constants');
+const { ANDROID_CLIENT_ID, GRANT_TYPE_REFRESH_TOKEN, X_API_VERSION } = require('../constants');
 
 const refreshToken = async ({ refreshToken }) => {
   const options = {
@@ -13,7 +13,7 @@ const refreshToken = async ({ refreshToken }) => {
   const params = {
     grant_type: GRANT_TYPE_REFRESH_TOKEN,
     refresh_token: refreshToken,
-    client_id: WEB_CLIENT_ID,
+    client_id: ANDROID_CLIENT_ID,
   }
 
   return authInstance.post(`/token/refresh`, params, options);

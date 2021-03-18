@@ -5,10 +5,8 @@ const createCreative = async ({ link, accessToken }) => {
     link: link,
     offerId: 1,
     description: 'Test Deeplink',
-    type: 'link'
+    type: 'deeplink'
   }
-
-  console.log(params);
 
   const options = {
     headers: {

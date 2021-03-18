@@ -3,15 +3,15 @@ import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
-import { AuthorizationForm, Button, Input } from 'components';
+import { AuthorizationForm, Control, Input } from 'components';
 import { login } from 'actions/auth';
 import { onlyLatin, required } from 'validators/baseControlValidators';
 import { getAuth } from 'selectors/auth';
-import { BUTTON_COLOR_TYPE } from 'constants/buttonColorType';
 
 import { loginErrorMapper } from 'errorMappers/loginErrorMapper';
+import { Button } from 'react-bootstrap';
 
-export const LoginForm = ({ backMethod, forgetCallback }) => {
+export const LoginForm = ({ setPreviousPage, setPasswordRecoveryPage }) => {
   const { t } = useTranslation();
 
   const dispatch = useDispatch();
@@ -28,40 +28,42 @@ export const LoginForm = ({ backMethod, forgetCallback }) => {
       backActionTitle={t('common.buttons.back')}
       formTitle={t('pages.authorizationForm.loginForm.title')}
       isLoading={isLoading}
-      backMethod={backMethod}
+      backMethod={setPreviousPage}
       submitErrorMapper={loginErrorMapper}
     >
-      <Input
+      <Control
         name="username"
         label={t('common.fields.username')}
         validators={[required, onlyLatin]}
         maxLength={32}
+        component={Input}
       />
-      <Input
+      <Control
         name="password"
         type="password"
         className="mb-1"
         label={t('common.fields.password')}
         validators={[required]}
         maxLength={64}
+        component={Input}
       />
       <Button
-        onClick={forgetCallback}
-        colorType={BUTTON_COLOR_TYPE.link}
-        className="d-block p-0"
-        buttonBlock={false}
-        title={<small>{t('common.buttons.forgetPassword')}</small>}
-      />
+        onClick={setPasswordRecoveryPage}
+        className="auto-width p-0 d-block"
+        variant="link"
+      >
+        <small>{t('common.buttons.forgetPassword')}</small>
+      </Button>
     </AuthorizationForm>
   );
 };
 
 LoginForm.propTypes = {
-  backMethod: PropTypes.func,
-  forgetCallback: PropTypes.func,
+  setPreviousPage: PropTypes.func,
+  setPasswordRecoveryPage: PropTypes.func,
 };
 
 LoginForm.defaultProps = {
-  backMethod: undefined,
-  forgetCallback: undefined,
+  setPreviousPage: undefined,
+  setPasswordRecoveryPage: undefined,
 };
