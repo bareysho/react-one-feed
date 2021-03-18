@@ -1,9 +1,9 @@
 const { transporter } = require('config/nodemailer');
 
-const sendEmailToken = (user, emailToken) => {
+const sendEmailToken = (mailTo, emailToken) => {
   transporter.sendMail({
     from: '"Node js" <nodejs@example.com>',
-    to: user.email,
+    to: mailTo,
     subject: 'Message from Node js',
     html:
       `Code verification is: ${emailToken.token}`,
