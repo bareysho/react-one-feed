@@ -17,6 +17,8 @@
           "cancellation": "Отмена"
         },
         "fields": {
+          "link": "Ссылка",
+          "epnAccount": "EPN аккуант",
           "username": "Имя пользователя",
           "password": "Пароль",
           "confirmationPassword": "Подтверждение праоля",
@@ -42,6 +44,7 @@
         "INVALID_OTP": "Неверный код подтверждения",
         "EXPIRED_OTP": "Устаревший код подтверждения",
         "USER_NOT_FOUND": "Пользватель не найден",
+        "NEED_RECAPTCHA": "Пройдите проверку",
         "USERNAME_EXISTS": "Имя пользователя уже зарегистрировано"
       },
       "components": {
@@ -54,9 +57,27 @@
         },
         "codeVerificationInfo": {
           "emailBeSent": "Мы отправим проверочный код на введенный email адрес."
+        },
+        "linkYouTubeAccount": {
+          "action": "Добавить YouTube"
+        },
+        "linkEpnAccountModal": {
+          "action": "Добавить EPN",
+          "title": "Добавить EPN аккаунт"
+        },
+        "linkShorterForm": {
+          "title": "Сократить ссылку",
+          "submitButton": "Сократить"
         }
       },
       "pages": {
+        "home": {
+          "sections": {
+            "linkedAccounts": "Добавленные аакаунты",
+            "linkAccounts": "Добавить акаунты",
+            "actions": "Добавленные аакаунты"
+          }
+        },
         "authorizationForm": {
           "successForm": {
             "passwordChanged": "Пароль успешно установлен"

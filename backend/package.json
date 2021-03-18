@@ -9,6 +9,7 @@
   "author": "bareysho",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "compression": "^1.7.4",
@@ -19,6 +20,7 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-jwt": "^6.0.0",
+    "googleapis": "^67.1.1",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.5.7",
     "mongoose": "^5.11.18",
@@ -26,7 +28,9 @@
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
-    "rootpath": "^0.1.2"
+    "rootpath": "^0.1.2",
+    "socket.io": "^4.0.0",
+    "youtube-api": "^3.0.1"
   },
   "devDependencies": {
     "express-favicon": "^2.0.1",

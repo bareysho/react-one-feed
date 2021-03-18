@@ -1,12 +1,64 @@
-.home-page {
-  .spinner-wrapper {
-    height: auto;
-    width: auto;
-    background-color: #f8f9fa;
+@import "styles/variables";
 
-    .spinner-border {
-      width: 30px;
-      height: 30px;
+.home-page {
+  .content {
+    padding: 20px 30px;
+  }
+
+  .auth-spinner {
+    .spinner-wrapper {
+      height: auto;
+      width: auto;
+      background-color: #f8f9fa;
+
+      .spinner-border {
+        width: 30px;
+        height: 30px;
+      }
     }
+  }
+
+  .content .section {
+    @include device(mobile) {
+      justify-content: center;
+      align-items: baseline;
+
+      &.link-accounts {
+        button {
+          margin: 10px;
+          width: 100%;
+          max-width: 250px;
+        }
+      }
+
+      .account-card {
+        margin: 10px;
+        width: 100%;
+        max-width: 250px;
+      }
+    }
+  }
+
+  .accounts-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .link-accounts {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 20px 0;
+
+    button {
+      max-width: 250px;
+      min-width: 250px;
+      margin: 10px 30px 0 0;
+    }
+  }
+
+  .actions {
+    display: flex;
+    margin-top: 20px;
   }
 }
