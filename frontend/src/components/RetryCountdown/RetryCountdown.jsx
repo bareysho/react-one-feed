@@ -1,27 +1,20 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'components/Controls';
 import { BUTTON_COLOR_TYPE } from 'constants/buttonColorType';
 import { useTranslation } from 'react-i18next';
 import { BUTTON_TYPE } from 'constants/buttonType';
-import { REQUESTED_OTP_EMAIL } from 'constants/localStorageItem';
-import { requestEmailCode } from 'actions/auth';
-import { useDispatch, useSelector } from 'react-redux';
-import { getAuth } from 'selectors/auth';
+import { requestEmailCode } from 'actions/emailToken';
+import { useDispatch } from 'react-redux';
 
-export const RetryCountdown = ({ startTimer, timeLeft, changeEmailCallback, type }) => {
+export const RetryCountdown = ({ startTimer, timeLeft, changeEmailCallback, email, type }) => {
   const { t } = useTranslation();
 
   const dispatch = useDispatch();
 
-  const { user } = useSelector(getAuth);
-  const { email } = user || {};
-
-  const recoveryEmail = useMemo(() => email || localStorage.getItem(REQUESTED_OTP_EMAIL), [email]);
-
   const onResendCallback = useCallback(async () => {
-    await dispatch(requestEmailCode({ email: recoveryEmail, type }));
-  }, [dispatch, recoveryEmail, type]);
+    await dispatch(requestEmailCode({ email, type }));
+  }, [dispatch, email, type]);
 
   const resendCallback = useCallback(async () => {
     startTimer();
@@ -44,14 +37,17 @@ export const RetryCountdown = ({ startTimer, timeLeft, changeEmailCallback, type
             />
           )}
       </div>
-      <div className="mb-3"><small>{t('components.retryCountdown.sentTo', { recoveryEmail })}</small></div>
-      <Button
-        type={BUTTON_TYPE.button}
-        title={t('common.buttons.changeEmail')}
-        colorType={BUTTON_COLOR_TYPE.outlineBrand}
-        disabled={Boolean(timeLeft)}
-        onClick={changeEmailCallback}
-      />
+      {email && (
+        <div className="mb-3"><small>{t('components.retryCountdown.sentTo', { recoveryEmail: email })}</small></div>)}
+      {changeEmailCallback && (
+        <Button
+          type={BUTTON_TYPE.button}
+          title={t('common.buttons.changeEmail')}
+          colorType={BUTTON_COLOR_TYPE.outlineBrand}
+          disabled={Boolean(timeLeft)}
+          onClick={changeEmailCallback}
+        />
+      )}
     </>
   );
 };
@@ -59,6 +55,7 @@ export const RetryCountdown = ({ startTimer, timeLeft, changeEmailCallback, type
 RetryCountdown.propTypes = {
   startTimer: PropTypes.func,
   type: PropTypes.string,
+  email: PropTypes.string,
   timeLeft: PropTypes.number,
   changeEmailCallback: PropTypes.func,
 };

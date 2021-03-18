@@ -14,6 +14,7 @@
           "send": "Отправить",
           "back": "Назад",
           "cancel": "Отменить",
+          "save": "Сохранить",
           "cancellation": "Отмена"
         },
         "fields": {
@@ -23,6 +24,8 @@
           "password": "Пароль",
           "confirmationPassword": "Подтверждение праоля",
           "otp": "Код подтверждения",
+          "currentPassword": "Текущий пароль",
+          "newPassword": "Новый пароль",
           "email": "Email адрес"
         },
         "plural": {
@@ -45,6 +48,7 @@
         "EXPIRED_OTP": "Устаревший код подтверждения",
         "USER_NOT_FOUND": "Пользватель не найден",
         "NEED_RECAPTCHA": "Пройдите проверку",
+        "INVALID_CURRENT_PASSWORD": "Неверный текущий пароль",
         "USERNAME_EXISTS": "Имя пользователя уже зарегистрировано"
       },
       "components": {
@@ -78,7 +82,16 @@
             "actions": "Добавленные аакаунты"
           }
         },
+        "settings": {
+          "changeEmail": {
+            "success": "Email успешно изменен",
+            "title": "Изменить email"
+          }
+        },
         "authorizationForm": {
+          "changePasswordForm": {
+            "title": "Изменить пароль"
+          },
           "successForm": {
             "passwordChanged": "Пароль успешно установлен"
           },

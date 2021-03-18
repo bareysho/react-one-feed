@@ -7,6 +7,7 @@
     "@reduxjs/toolkit": "^1.4.0",
     "axios": "^0.21.1",
     "babel-plugin-import": "^1.13.1",
+    "balloon-css": "^1.2.0",
     "bootstrap": "^4.6.0",
     "classnames": "^2.2.6",
     "eslint": "^7.21.0",

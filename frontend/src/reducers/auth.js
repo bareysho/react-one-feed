@@ -1,16 +1,17 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+import { setLoading } from 'reducers/common';
+import { USER_KEY } from 'constants/common';
 import {
+  changeAuthUserEmail,
+  clearUser,
   login,
   logout,
   recallUser,
   registration,
-  requestEmailCode,
-  verifyEmailVerificationCode,
-  verifyPasswordRecoveryCode
+  setAuthLoading,
+  verifyRegistration
 } from 'actions/auth';
-import { USER_KEY } from 'constants/common';
-import { setLoading } from 'reducers/common';
 
 export const getUserFromLS = () => {
   const userData = localStorage.getItem(USER_KEY) || '';
@@ -47,44 +48,36 @@ const authenticateFulfilledReducer = (state, action) => {
   });
 };
 
+const setInitialState = (state) => ({
+  ...state,
+  ...initialState,
+});
+
 export const authSlice = createSlice({
   extraReducers: (builder) => {
-    builder.addCase(login.fulfilled, authenticateFulfilledReducer);
-    builder.addCase(login.pending, setLoading(true));
-    builder.addCase(login.rejected, setLoading(false));
-    builder.addCase(verifyEmailVerificationCode.fulfilled, authenticateFulfilledReducer);
-    builder.addCase(verifyEmailVerificationCode.pending, setLoading(true));
-    builder.addCase(verifyEmailVerificationCode.rejected, setLoading(false));
-    builder.addCase(registration.fulfilled, registrationFulfilledReducer);
-    builder.addCase(registration.pending, setLoading(true));
-    builder.addCase(registration.rejected, setLoading(false));
-    builder.addCase(requestEmailCode.fulfilled, (state, action) => {
-      return ({
-        ...state,
-        user: action.payload,
-        isLoading: false,
-      });
-    });
-    builder.addCase(requestEmailCode.pending, setLoading(true));
-    builder.addCase(requestEmailCode.rejected, setLoading(false));
-    builder.addCase(verifyPasswordRecoveryCode.fulfilled, (state, action) => {
-      return ({
-        ...state,
-        user: null,
-        isLoading: false,
-      });
-    });
-    builder.addCase(verifyPasswordRecoveryCode.pending, setLoading(true));
-    builder.addCase(verifyPasswordRecoveryCode.rejected, setLoading(false));
+    builder.addCase(setAuthLoading, (state, action) => setLoading(action.payload)(state));
+    builder.addCase(changeAuthUserEmail, (state, action) => ({
+      ...state,
+      user: {
+        ...state.user,
+        email: action.payload
+      }
+    }));
+    builder.addCase(clearUser, setInitialState);
     builder.addCase(recallUser.pending, setLoading(true));
     builder.addCase(recallUser.fulfilled, authenticateFulfilledReducer);
     builder.addCase(logout.pending, setLoading(true));
     builder.addCase(logout.rejected, setLoading(false));
-    builder.addCase(logout.fulfilled, (state, action) => ({
-      ...state,
-      initialState,
-      isLoading: false,
-    }));
+    builder.addCase(logout.fulfilled, setInitialState);
+    builder.addCase(login.fulfilled, authenticateFulfilledReducer);
+    builder.addCase(login.pending, setLoading(true));
+    builder.addCase(login.rejected, setLoading(false));
+    builder.addCase(verifyRegistration.fulfilled, authenticateFulfilledReducer);
+    builder.addCase(verifyRegistration.pending, setLoading(true));
+    builder.addCase(verifyRegistration.rejected, setLoading(false));
+    builder.addCase(registration.fulfilled, registrationFulfilledReducer);
+    builder.addCase(registration.pending, setLoading(true));
+    builder.addCase(registration.rejected, setLoading(false));
   },
   initialState,
   name: '@auth',

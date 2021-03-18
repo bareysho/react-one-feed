@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import InputMask from 'react-input-mask';
 import { Field } from 'react-final-form';
 
-export const Input = ({ name, label, type, validators, maxLength, className, mask }) => {
+export const Input = ({ name, label, type, validators, maxLength, className, mask, disabled }) => {
   const composeValidators = useCallback(
     (value) => (validators || []).reduce((error, validator) => error || validator(value), undefined),
     [validators],
@@ -24,7 +24,7 @@ export const Input = ({ name, label, type, validators, maxLength, className, mas
         const isInvalid = hasValue ? superError : submitFailed && superError;
 
         const formGroupClassName = classNames('form-group', className);
-        const inputClassName = classNames('form-control rounded', { 'is-invalid': isInvalid });
+        const inputClassName = classNames('form-control rounded', { 'is-invalid': isInvalid, disabled });
         const labelClassName = classNames({ 'text-danger': isInvalid });
 
         return (
@@ -49,6 +49,7 @@ export const Input = ({ name, label, type, validators, maxLength, className, mas
                 type={type || 'text'}
                 name={name}
                 id={name}
+                disabled={disabled}
                 maxLength={maxLength}
                 className={inputClassName}
               />
@@ -70,4 +71,5 @@ Input.propTypes = {
   label: PropTypes.string,
   type: PropTypes.string,
   maxLength: PropTypes.number,
+  disabled: PropTypes.bool,
 };

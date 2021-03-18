@@ -21,7 +21,7 @@ export const LinkEpnAccountModal = () => {
 
   return (
     <>
-      <Button onClick={showModal}>{t('components.linkEpnAccountModal.actions')}</Button>
+      <Button onClick={showModal}>{t('components.linkEpnAccountModal.action')}</Button>
       <Modal className="link-epn-account-modal" centered show={isOpen} onHide={hideModal}>
         <Modal.Header>
           <Modal.Title>{t('components.linkEpnAccountModal.title')}</Modal.Title>
