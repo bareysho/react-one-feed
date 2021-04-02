@@ -1,0 +1,28 @@
+@import "styles/variables";
+
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins/_breakpoints";
+
+.confirmation-modal {
+  .action-buttons {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+
+    button.cancel {
+      margin-right: 10px;
+    }
+  }
+
+  @include media-breakpoint-only(xs) {
+    .action-buttons {
+      flex-direction: column;
+
+      button {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+    }
+  }
+}

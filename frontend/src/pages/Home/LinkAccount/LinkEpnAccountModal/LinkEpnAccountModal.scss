@@ -1,0 +1,12 @@
+@import "node_modules/bootstrap/scss/functions";
+@import "node_modules/bootstrap/scss/variables";
+@import "node_modules/bootstrap/scss/mixins/breakpoints";
+@import "node_modules/balloon-css/src/balloon";
+
+.link-epn-account-modal {
+  @include media-breakpoint-up(sm) {
+    .modal-dialog {
+      max-width: 370px;
+    }
+  }
+}

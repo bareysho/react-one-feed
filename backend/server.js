@@ -29,6 +29,11 @@ createTestUser();
 
 const app = express();
 
+const http = require('http').Server(app);
+const socketIO = require('socket.io');
+
+const io = socketIO(http, { cors: { origin: '*' } });
+
 const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -37,6 +42,15 @@ app.use(bodyParser.json());
 
 // allow cors requests from any origin and with credentials
 app.use(cors({ origin: (origin, callback) => callback(null, true), credentials: true }));
+
+io.on('connection', (socket) => {
+  console.log(`connection established via id: ${socket.id}`);
+
+  socket.on('online', () => {
+    console.log('emit joined ', socket.id);
+    io.sockets.emit('joined');
+  });
+});
 
 app.use(cookieParser());
 app.use(passport.initialize())
@@ -51,6 +65,8 @@ app.get('*', (req, res) => {
 
 app.use(errorHandler);
 
-app.listen(PORT, () => {
+module.exports.ioObject = io;
+
+http.listen(PORT, () => {
   console.log(`Backend starts on PORT ${PORT}`)
 });

@@ -1,1 +1,0 @@
-export { SetPasswordForm } from './SetPasswordForm';

@@ -1,0 +1,56 @@
+@import "styles/variables";
+
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins/_breakpoints";
+
+.description-parser {
+  margin-bottom: 20px;
+
+  .descriptions {
+    flex-direction: column;
+    margin-bottom: 20px;
+
+    .form-group {
+      width: 100%;
+    }
+
+    textarea {
+      resize: none;
+    }
+
+    .arrow {
+      .right {
+        display: none;
+      }
+
+      .down {
+        display: block;
+      }
+
+      @include media-breakpoint-up(sm) {
+        .down {
+          display: none;
+        }
+
+        .right {
+          display: block;
+        }
+      }
+    }
+  }
+
+  @include media-breakpoint-down(sm) {
+    .descriptions {
+      .form-group {
+        margin: 0;
+      }
+    }
+  }
+
+  @include media-breakpoint-up(md) {
+    .descriptions {
+      flex-direction: row;
+    }
+  }
+}

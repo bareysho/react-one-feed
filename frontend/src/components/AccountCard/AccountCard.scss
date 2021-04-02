@@ -1,0 +1,32 @@
+$min-width: 240px;
+$account-logo-size: 30px;
+
+.account-card {
+  min-width: $min-width;
+  margin: 20px 20px 0 0;
+
+  .card {
+    .isLoading.card-header {
+      justify-content: center;
+    }
+
+    .card-header {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+
+      .account-logo {
+        width: $account-logo-size;
+        height: $account-logo-size;
+        margin-right: 10px;
+      }
+    }
+
+    .card-body {
+      position: relative;
+      padding: 0;
+      min-width: $min-width;
+      min-height: 100px;
+    }
+  }
+}

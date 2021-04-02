@@ -6,6 +6,7 @@ const refreshTokenService = require('services/refreshToken.service');
 const userService = require('services/user.service');
 const userValidationService = require('services/userValidation.service');
 const emailTokenService = require('services/emailToken.service');
+const { basicDetails } = require('utils/user');
 
 const { authenticateJWT } = require('middlewares/authorize');
 const { authenticateLocal } = require('middlewares/authorize');
@@ -26,10 +27,10 @@ const registration = (req, res) => {
         .then(() => userService.removeUsers(unverifiedUsers));
     })
     .then(() => userService.createUser({ email, username, password }).save())
-    .then(user => emailTokenService.handleSendEmailToken(user, VERIFICATION).then(() => user))
-    .then(user => { res.json(user); })
+    .then(user => emailTokenService.handleSendEmailToken(user.id, email, VERIFICATION).then(() => user))
+    .then(user => { res.json(basicDetails(user)); })
     .catch(error => {
-      res.status(400).json({ message: error });
+      res.status(403).json({ message: error });
     });
 }
 

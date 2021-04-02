@@ -1,49 +1,45 @@
-import React, { useCallback } from 'react';
-import { Navbar,
-  Container,
-  Nav,
-  NavDropdown } from 'react-bootstrap';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 
-import { logout } from 'actions/auth';
-import { NavigationService } from 'navigation';
-import { Spinner } from 'components';
+import socket from 'api/socket';
+import { store } from 'store';
+import { getLinkedAccounts } from 'actions/linkedAccounts';
 
-import './home.scss';
+import { LinkShorterForm } from './LinkShorter/LinkShorterForm';
+import { DescriptionParser } from './DescriptionParser/DescriptionParser';
+import { YouTube } from './YouTube/YouTube';
+import { LinkedAccounts } from './LinkedAccounts/LinkedAccounts';
+import { LinkAccount } from './LinkAccount/LinkAccount';
 
-export const NavigationBar = () => {
-  const dispatch = useDispatch();
+import { Section } from './Section/Section';
 
-  const { user, isLoading } = useSelector((state) => state.auth);
+socket.on('joined', () => {
+  store.dispatch(getLinkedAccounts());
+});
 
-  const { username } = user || {};
-
-  const handleLogout = useCallback(async () => {
-    await dispatch(logout());
-
-    NavigationService.navigateToIndex();
-  }, [dispatch]);
-
-  const UserNav = (
-    <NavDropdown title={isLoading ? <Spinner /> : username} id="basic-nav-dropdown">
-      <NavDropdown.Item onClick={handleLogout}>Выход</NavDropdown.Item>
-    </NavDropdown>
-  );
+export const Home = () => {
+  const { t } = useTranslation();
 
   return (
-    <div className="home-page">
-      <Navbar bg="light" expand="lg">
-        <Container>
-          <Navbar.Brand>React Authentication</Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="mr-auto" />
-            <Nav>
-              {UserNav}
-            </Nav>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
+    <div className="page-container home">
+      <h1 className="title mb-5">Инструменты</h1>
+      <div className="content">
+        <Section title={t('pages.home.sections.linkedAccounts')}>
+          <LinkedAccounts />
+        </Section>
+        <Section title={t('pages.home.sections.linkAccounts')}>
+          <LinkAccount />
+        </Section>
+        <Section title={t('pages.home.sections.shortenLink')}>
+          <LinkShorterForm />
+        </Section>
+        <Section title={t('pages.home.sections.getVideoInformation')}>
+          <YouTube />
+        </Section>
+        <Section title={t('pages.home.sections.parseDescription')}>
+          <DescriptionParser />
+        </Section>
+      </div>
     </div>
   );
 };

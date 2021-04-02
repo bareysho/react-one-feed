@@ -2,11 +2,10 @@ import React, { useCallback, useMemo } from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { Form } from 'react-final-form';
-import { Spinner } from 'components/Spinner';
-import { Button } from 'components/Controls';
+import { SpinnerWrapper } from 'components/SpinnerWrapper';
 import { getErrorsObject } from 'utils/error';
 import { BUTTON_TYPE } from 'constants/buttonType';
-import { BUTTON_COLOR_TYPE } from 'constants/buttonColorType';
+import { Button } from 'react-bootstrap';
 
 import './AuthorizationForm.scss';
 
@@ -50,7 +49,7 @@ export const AuthorizationForm = ({
           {formTitle && <h4 className="form-title mb-3">{formTitle}</h4>}
           <fieldset className="field-set" disabled={isFormDisabled}>
             {isLoading && (
-              <Spinner />
+              <SpinnerWrapper size={60} />
             )}
             {children}
             {submitError && <small className="text-danger">{submitError}</small>}
@@ -58,17 +57,24 @@ export const AuthorizationForm = ({
           <br />
           <Button
             type={BUTTON_TYPE.submit}
-            title={submitActionTitle}
+            block
             disabled={submitButtonDisabled || isLoading}
-          />
+            variant="primary"
+            className="fullwidth"
+          >
+            {submitActionTitle}
+          </Button>
           {backMethod && (
             <Button
               type={BUTTON_TYPE.button}
-              title={backActionTitle}
-              colorType={BUTTON_COLOR_TYPE.brandSecondary}
+              block
               onClick={backMethod}
               disabled={isLoading}
-            />
+              variant="secondary"
+              className="fullwidth"
+            >
+              {backActionTitle}
+            </Button>
           )}
         </form>
       )}
