@@ -1,0 +1,18 @@
+@import "styles/variables";
+
+.video-info {
+  margin-top: 20px;
+
+  small {
+    color: $gray;
+  }
+
+  img {
+    width: -webkit-fill-available;
+    max-width: 100%;
+  }
+
+  textarea {
+    resize: none;
+  }
+}

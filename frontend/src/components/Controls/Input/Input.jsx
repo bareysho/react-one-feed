@@ -1,73 +1,34 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import InputMask from 'react-input-mask';
-import { Field } from 'react-final-form';
+import { Form } from 'react-bootstrap';
 
-export const Input = ({ name, label, type, validators, maxLength, className, mask }) => {
-  const composeValidators = useCallback(
-    (value) => (validators || []).reduce((error, validator) => error || validator(value), undefined),
-    [validators],
-  );
+export const Input = ({ name, disabled, maxLength, onChange, isInvalid, value, type, className }) => {
+  const inputClassNames = classNames('input', className);
 
   return (
-    <Field
+    <Form.Control
       name={name}
-      validate={composeValidators}
-      render={({ input, meta }) => {
-        const { submitFailed, error, submitError } = meta;
-
-        const superError = error || submitError;
-
-        const hasValue = input.value;
-
-        const isInvalid = hasValue ? superError : submitFailed && superError;
-
-        const formGroupClassName = classNames('form-group', className);
-        const inputClassName = classNames('form-control rounded', { 'is-invalid': isInvalid });
-        const labelClassName = classNames({ 'text-danger': isInvalid });
-
-        return (
-          <div className={formGroupClassName}>
-            <label htmlFor={name} className="mb-1 text-muted">
-              <small className={labelClassName}>{label}</small>
-            </label>
-            {mask ? (
-              <InputMask
-                mask={mask}
-                name={name}
-                id={name}
-                className={inputClassName}
-                value={input.value}
-                onChange={input.onChange}
-              >
-                {(inputProps) => (<input {...inputProps} type="tel" />)}
-              </InputMask>
-            ) : (
-              <input
-                {...input}
-                type={type || 'text'}
-                name={name}
-                id={name}
-                maxLength={maxLength}
-                className={inputClassName}
-              />
-            )}
-
-            {isInvalid && <small className="text-danger">{superError}</small>}
-          </div>
-        );
-      }}
+      as="input"
+      className={inputClassNames}
+      type={type}
+      isInvalid={isInvalid}
+      disabled={disabled}
+      value={value}
+      onChange={onChange}
+      maxLength={maxLength}
+      id={name}
     />
   );
 };
 
 Input.propTypes = {
-  validators: PropTypes.arrayOf(PropTypes.func),
-  className: PropTypes.string,
-  mask: PropTypes.string,
-  name: PropTypes.string,
-  label: PropTypes.string,
-  type: PropTypes.string,
   maxLength: PropTypes.number,
+  value: PropTypes.string,
+  className: PropTypes.string,
+  type: PropTypes.string,
+  isInvalid: PropTypes.bool,
+  onChange: PropTypes.func,
+  name: PropTypes.string,
+  disabled: PropTypes.bool,
 };

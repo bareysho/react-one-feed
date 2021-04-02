@@ -1,20 +1,21 @@
 const requestWrappers = require('./requestWrappers');
 
-const refreshToken = async (refreshToken) => {
+const refreshTokens = async (refreshToken) => {
   try {
-    const { data: { date: { attributes } } } = await requestWrappers.refreshToken({ refreshToken })
+    const response = await requestWrappers.refreshToken({ refreshToken })
 
-    const { access_token: accessToken, refresh_token: refreshToken } = attributes;
+    const { data: { data: { attributes } } } = response;
+    const { access_token: accessToken, refresh_token: newRefreshToken } = attributes;
 
-    return { accessToken, refreshToken };
+    return { accessToken, refreshToken: newRefreshToken };
   } catch (error) {
     console.log('REFRESH_TOKEN_REQUEST_ERROR');
-    console.log(error.response.data);
+    console.log(error);
 
     throw error.response.data;
   }
 }
 
 module.exports = {
-  refreshToken,
+  refreshTokens,
 }

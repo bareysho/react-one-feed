@@ -23,3 +23,14 @@ export const fetchLinkedAccount = createAsyncThunk('@epnAuth/fetchLinkedAccount'
       return rejectWithValue(error.response.data);
     }
   })
+
+export const deleteLinkedAccount = createAsyncThunk('@epnAuth/deleteLinkedAccount',
+  async ({ id, type }, { rejectWithValue }) => {
+    try {
+      const { data } = await linkedAccountApi.deleteLinkedAccount({ id, type });
+
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  })

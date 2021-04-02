@@ -26,9 +26,14 @@ const getUserProfileById = (accountId, userId) => {
   return YouTubeUser.findOne({ user: userId, accountId });
 }
 
+const deleteUser = (accountId, userId) => {
+  return YouTubeUser.deleteOne({ user: userId, accountId });
+}
+
 module.exports = {
   createUser,
   saveCredentials,
   getUserProfileIdsByUser,
   getUserProfileById,
+  deleteUser,
 }

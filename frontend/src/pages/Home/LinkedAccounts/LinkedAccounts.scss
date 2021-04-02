@@ -1,0 +1,21 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins/_breakpoints";
+
+.linked-accounts-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+
+  .account-card {
+    max-width: 250px;
+  }
+
+  @include media-breakpoint-down(sm) {
+    .account-card {
+      margin: 10px 0 0 0;
+      max-width: 100%;
+      min-width: 100%;
+    }
+  }
+}

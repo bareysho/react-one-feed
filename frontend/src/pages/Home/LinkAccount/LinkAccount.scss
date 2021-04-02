@@ -1,0 +1,16 @@
+@import "node_modules/bootstrap/scss/functions";
+@import "node_modules/bootstrap/scss/variables";
+@import "node_modules/bootstrap/scss/mixins/breakpoints";
+@import "node_modules/balloon-css/src/balloon";
+
+.link-account {
+  button {
+    margin: 10px 30px 10px 0;
+  }
+
+  @include media-breakpoint-down(sm) {
+    .button {
+      margin: 10px 0;
+    }
+  }
+}

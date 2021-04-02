@@ -4,9 +4,9 @@ const createCreative = async (link, accessToken) => {
   try {
     const creativeResponse = await requestWrappers.createCreative({ link, accessToken });
 
-    const { data: { data: { attributes: { code } } } } = creativeResponse;
+    const { data: { data: { attributes } } } = creativeResponse;
 
-    return code;
+    return attributes;
   } catch (error) {
     console.log('CREATE_CREATIVE_REQUEST_ERROR');
     console.log(error.response.data);

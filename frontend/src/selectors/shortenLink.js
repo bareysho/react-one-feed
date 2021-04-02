@@ -1,1 +1,1 @@
-export const getShortenLinkSelector = (state) => state.shortenLink;
+export const getShortenLinkSelector = (state) => state.epn.shortenLink;

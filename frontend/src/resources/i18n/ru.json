@@ -12,21 +12,51 @@
           "retrySending": "Повторить отправку",
           "changeEmail": "Изменить email",
           "send": "Отправить",
+          "disable": "Отключить",
+          "getInformation": "Получить информацию",
+          "convertWithQuality": "Конвертировать в {{quality}}p",
+          "downloadWithQuality": "Скачать в {{quality}}p",
           "back": "Назад",
           "cancel": "Отменить",
+          "save": "Сохранить",
           "cancellation": "Отмена"
+        },
+        "placeholders": {
+          "chooseAccount": "Выберите аккаунт",
+          "chooseShortDomain": "Выберите сокращенный домен",
+          "chooseCreative": "Выберите креатив"
         },
         "fields": {
           "link": "Ссылка",
           "epnAccount": "EPN аккуант",
+          "youTubeLink": "Ссылка на видео",
+          "originalDescription": "Оригинальное описание",
+          "parsedDescription": "Полученное описание",
+          "shortDomain": "Сокращенный домен",
+          "creative": "Креатив",
           "username": "Имя пользователя",
           "password": "Пароль",
           "confirmationPassword": "Подтверждение праоля",
           "otp": "Код подтверждения",
+          "currentPassword": "Текущий пароль",
+          "newPassword": "Новый пароль",
+          "tags": "Теги",
+          "description": "Описание",
+          "title": "Название",
+          "audio": "Аудио",
+          "video": "Видео",
+          "downloadingVideo": "Скачивание видео",
           "email": "Email адрес"
         },
         "plural": {
           "symbolInterval": "(0)[символ];(1)[символа];(2)[символов];"
+        }
+      },
+      "navbar": {
+        "areas": {
+          "home": "Инструменты",
+          "settings": "Настройки",
+          "logout": "Выход"
         }
       },
       "validators": {
@@ -45,9 +75,27 @@
         "EXPIRED_OTP": "Устаревший код подтверждения",
         "USER_NOT_FOUND": "Пользватель не найден",
         "NEED_RECAPTCHA": "Пройдите проверку",
+        "INVALID_CURRENT_PASSWORD": "Неверный текущий пароль",
         "USERNAME_EXISTS": "Имя пользователя уже зарегистрировано"
       },
       "components": {
+        "accountCard": {
+          "accountBody": {
+            "fields": {
+              "id": "ID: {{id}}",
+              "email": "Email: {{email}}",
+              "balance": "Доступно {{currency}}: {{value}}"
+            }
+          }
+        },
+        "disableAccountModal": {
+          "title": "Отключение аккаунта",
+          "description": "Вы действительно хотите отключить аккаунт?"
+        },
+        "logoutModal": {
+          "title": "Подтвердите выход",
+          "description": "Вы действительно хотите выйти?"
+        },
         "retryCountdown": {
           "retryIn": "Код отправлен, повтор через: {{timeLeft}}",
           "sentTo": "Код подтверждения отправлен на {{recoveryEmail}}"
@@ -67,18 +115,44 @@
         },
         "linkShorterForm": {
           "title": "Сократить ссылку",
-          "submitButton": "Сократить"
+          "submitButton": "Сократить ссылку"
         }
       },
       "pages": {
         "home": {
           "sections": {
-            "linkedAccounts": "Добавленные аакаунты",
-            "linkAccounts": "Добавить акаунты",
-            "actions": "Добавленные аакаунты"
+            "linkedAccounts": "Добавленные аккаунты",
+            "linkAccounts": "Добавить аккаунты",
+            "getVideoInformation": "Получить информацию о видео",
+            "parseDescription": "Спарсить описание",
+            "shortenLink": "Сократить ссылку"
+          },
+          "youtube": {
+            "convertingProgress": {
+              "title": "Видео конвертируется в 1080",
+              "description": "После обработки будет доступно для скачивания.",
+              "hint": "На Youtube нет единого файла в 1080р, видео и звук - отдельные файлы, сейчас мы объединяем видео и аудио в один mp4 файл.",
+              "error": "Видео невозможно конвертировать, используйте 720p"
+            },
+            "videoInformationForm": {
+              "informationLoading": "Информация загружается"
+            }
+          }
+        },
+        "settings": {
+          "title": "Настройки",
+          "profileInfo": {
+            "title": "Информация о профиле"
+          },
+          "changeEmail": {
+            "success": "Email успешно изменен",
+            "title": "Изменить email"
           }
         },
         "authorizationForm": {
+          "changePasswordForm": {
+            "title": "Изменить пароль"
+          },
           "successForm": {
             "passwordChanged": "Пароль успешно установлен"
           },
