@@ -56,16 +56,20 @@ const convertToFullHD = (req, res) => {
           '-loglevel', '0', '-hide_banner',
           '-i', 'pipe:3',
           '-i', 'pipe:4',
-          '-c', 'copy',
-          '-c:a', 'flac',
-          '-f', 'matroska', 'pipe:5',
+          // Map audio & video from streams
+          '-map', '0:a',
+          '-map', '1:v',
+          // Keep encoding
+          '-c:v', 'copy',
+          // Define output file
+          `videos/${info.id}.mp4`,
         ], {
           windowsHide: true,
           stdio: [
             /* Standard: stdin, stdout, stderr */
             'inherit', 'inherit', 'inherit',
             /* Custom: pipe:3, pipe:4, pipe:5, pipe:6 */
-            'pipe', 'pipe', 'pipe', 'pipe'
+            'pipe', 'pipe', 'pipe'
           ],
         });
 
@@ -104,8 +108,6 @@ const convertToFullHD = (req, res) => {
 
         audio.pipe(ffmpegProcess.stdio[3]);
         video.pipe(ffmpegProcess.stdio[4]);
-
-        ffmpegProcess.stdio[5].pipe(fs.createWriteStream(`videos/${info.id}.mp4`));
 
         processes = { ...processes, [info.id]: { ffmpegProcess } }
       }
@@ -151,7 +153,6 @@ const convertCancel = (req, res) => {
 
     childProcess.ffmpegProcess.stdio[3].destroy();
     childProcess.ffmpegProcess.stdio[4].destroy();
-    childProcess.ffmpegProcess.stdio[5].destroy();
 
     try {
       fs.unlinkSync(path.join(__dirname, '../../videos/', `${downloadUrl}.mp4`));
