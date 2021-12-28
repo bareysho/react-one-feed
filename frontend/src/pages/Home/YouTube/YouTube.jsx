@@ -15,7 +15,9 @@ socket.on('msg', ({ audioProcessed, videoProcessed, convertedVideoId, converting
 });
 
 export const YouTube = () => {
-  const { videoInfo, isLoading: isVideoInformationLoading } = useSelector(getVideoInformationSelector);
+  const { videoInfo: videoDetails, isLoading: isVideoInformationLoading } = useSelector(getVideoInformationSelector);
+
+  const { videoDetails: videoInfo } = videoDetails || {};
 
   return (
     <>

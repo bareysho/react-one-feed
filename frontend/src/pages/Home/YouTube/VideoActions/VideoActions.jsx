@@ -1,12 +1,13 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { Button, Spinner } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
+import { saveAs } from 'file-saver';
 
 import { ConvertingProgress } from 'pages/Home/YouTube/ConvertingProgress/ConvertingProgress';
 import { ProgressInformation } from 'components/ProgressInformation/ProgressInformation';
 
 import { getConvertingProgressSelector, getConvertingVideoSelector } from 'selectors/youTube';
-import { convertVideo, downloadConvertedVideo } from 'actions/youTube/convertVideo';
+import { convertVideo } from 'actions/youTube/convertVideo';
 import { videoInformation } from 'propTypes/videoInformation';
 import { useTranslation } from 'react-i18next';
 
@@ -20,13 +21,16 @@ export const VideoActions = ({ videoInfo }) => {
   const { downloadingProgress, convertedVideoId, convertingError } = useSelector(getConvertingVideoSelector);
   const { audioProcessed, videoProcessed } = useSelector(getConvertingProgressSelector);
 
-  const { webpage_url: videoUrl, url: playVideoUrl, id: videoId } = videoInfo;
+  const { video_url: videoUrl, url: playVideoUrl, videoId } = videoInfo;
 
   const isSomeProcess = useMemo(() => audioProcessed && videoProcessed, [audioProcessed, videoProcessed]);
 
   const handleDownload1080 = useCallback(() => {
-    dispatch(downloadConvertedVideo({ downloadUrl: videoId }));
-  }, [dispatch, videoId]);
+    const host = process.env.NODE_ENV === 'development'
+      ? 'http://localhost:3000' : `https://${window.location.hostname}`;
+
+    saveAs(host, `${videoId}.mp4`);
+  }, [videoId]);
 
   const handleDownload720 = useCallback(() => {
     window.open(playVideoUrl, '_blank');

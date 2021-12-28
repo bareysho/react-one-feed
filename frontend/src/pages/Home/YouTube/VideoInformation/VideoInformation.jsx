@@ -9,7 +9,9 @@ import './VideoInformation.scss';
 export const VideoInformation = ({ videoInfo }) => {
   const { t } = useTranslation();
 
-  const { title, thumbnail, description, tags = [] } = videoInfo;
+  const { title, thumbnails, description, keywords: tags = [] } = videoInfo;
+
+  const [{ url: thumbnail }] = [...thumbnails].reverse();
 
   const tagsString = useMemo(() => tags.join(', '), [tags]);
 
