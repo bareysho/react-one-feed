@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 
 const ytdl = require('ytdl-core');
-const youtubedl = require('youtube-dl');
 const ffmpeg = require('ffmpeg-static');
 
 const cp = require('child_process');
@@ -15,103 +14,111 @@ const { authenticateJWT } = require('middlewares/authorize');
 
 let processes = {};
 
+const videosPath = path.join(__dirname, '../../../build/static/videos/');
+
 const convertToFullHD = (req, res) => {
   const { downloadUrl } = req.body;
 
   return async () => {
-    youtubedl.getInfo(downloadUrl, ['-f', 'best'], (err, info) => {
-      const tracker = {
-        start: Date.now(),
-        audio: { downloaded: 0, total: Infinity },
-        video: { downloaded: 0, total: Infinity },
-      };
+    const info = await ytdl.getInfo(downloadUrl);
 
-      try {
-        fs.statSync(`videos/${info.id}.mp4`);
+    const { videoDetails: { videoId }} = info;
 
-        server.ioObject.sockets.emit("msg", { audioProcessed: 0, videoProcessed: 0, convertedVideoId: info.id });
-      } catch (error) {
-        server.ioObject.sockets.emit("msg", { audioProcessed: 1, videoProcessed: 1 });
+    const videoFilePath = path.join(videosPath, `${videoId}.mp4`);
 
-        const audio = ytdl(downloadUrl, { quality: 'highestaudio' })
-          .on('progress', (_, downloaded, total) => {
-            tracker.audio = { downloaded, total };
-          });
+    const tracker = {
+      start: Date.now(),
+      audio: { downloaded: 0, total: Infinity },
+      video: { downloaded: 0, total: Infinity },
+    };
 
-        const video = ytdl(downloadUrl, { quality: 'highestvideo' })
-          .on('progress', (_, downloaded, total) => {
-            tracker.video = { downloaded, total };
-          });
+    try {
+      fs.statSync(videoFilePath);
 
-        const progressbar = setInterval(() => {
-          const audioProcessed = Math.floor(tracker.audio.downloaded / tracker.audio.total * 100);
-          const videoProcessed = Math.floor(tracker.video.downloaded / tracker.video.total * 100);
+      server.ioObject.sockets.emit("msg", { audioProcessed: 0, videoProcessed: 0, convertedVideoId: videoId });
+    } catch (error) {
+      server.ioObject.sockets.emit("msg", { audioProcessed: 1, videoProcessed: 1 });
 
-          if (audioProcessed && videoProcessed) {
-            server.ioObject.sockets.emit("msg", { audioProcessed, videoProcessed });
-          }
-        }, 5000);
+      const audio = ytdl(downloadUrl, { quality: 'highestaudio' })
+      .on('progress', (_, downloaded, total) => {
+        tracker.audio = { downloaded, total };
+      });
 
-        const ffmpegProcess = cp.spawn(ffmpeg, [
-          '-loglevel', '0', '-hide_banner',
-          '-i', 'pipe:3',
-          '-i', 'pipe:4',
-          '-c', 'copy',
-          '-c:a', 'flac',
-          '-f', 'matroska', 'pipe:5',
-        ], {
-          windowsHide: true,
-          stdio: [
-            /* Standard: stdin, stdout, stderr */
-            'inherit', 'inherit', 'inherit',
-            /* Custom: pipe:3, pipe:4, pipe:5, pipe:6 */
-            'pipe', 'pipe', 'pipe', 'pipe'
-          ],
-        });
+      const video = ytdl(downloadUrl, { quality: 'highestvideo' })
+      .on('progress', (_, downloaded, total) => {
+        tracker.video = { downloaded, total };
+      });
 
-        ffmpegProcess.on('close', () => {
-          tracker.video = { ...tracker.video, downloaded: tracker.video.total };
-          tracker.audio = { ...tracker.audio, downloaded: tracker.audio.total };
+      const progressbar = setInterval(() => {
+        const audioProcessed = Math.floor(tracker.audio.downloaded / tracker.audio.total * 100);
+        const videoProcessed = Math.floor(tracker.video.downloaded / tracker.video.total * 100);
 
-          setTimeout(() => {
-            clearInterval(progressbar);
+        if (audioProcessed && videoProcessed) {
+          server.ioObject.sockets.emit("msg", { audioProcessed, videoProcessed });
+        }
+      }, 5000);
 
-            try {
-              fs.statSync(path.join(__dirname, '../../videos/', `${info.id}.mp4`));
+      const ffmpegProcess = cp.spawn(ffmpeg, [
+        '-loglevel', '0', '-hide_banner',
+        '-i', 'pipe:3',
+        '-i', 'pipe:4',
+        // Map audio & video from streams
+        '-map', '0:a',
+        '-map', '1:v',
+        // Keep encoding
+        '-c:v', 'copy',
+        // Define output file
+        videoFilePath,
+      ], {
+        windowsHide: true,
+        stdio: [
+          /* Standard: stdin, stdout, stderr */
+          'inherit', 'inherit', 'inherit',
+          /* Custom: pipe:3, pipe:4, pipe:5, pipe:6 */
+          'pipe', 'pipe', 'pipe'
+        ],
+      });
 
-              server.ioObject.sockets.emit("msg", { audioProcessed: 0, videoProcessed: 0, convertedVideoId: info.id });
-            } catch (error) {
-              server.ioObject.sockets.emit("msg", { audioProcessed: 0, videoProcessed: 0, convertedVideoId: null });
-            }
+      ffmpegProcess.on('close', () => {
+        tracker.video = { ...tracker.video, downloaded: tracker.video.total };
+        tracker.audio = { ...tracker.audio, downloaded: tracker.audio.total };
 
-          }, 1000)
-        });
+        setTimeout(() => {
+          clearInterval(progressbar);
 
-        video.on('error', () => {
           try {
-            fs.unlinkSync(path.join(__dirname, '../../videos/', `${info.id}.mp4`));
+            fs.statSync(videoFilePath);
+
+            server.ioObject.sockets.emit("msg", { audioProcessed: 0, videoProcessed: 0, convertedVideoId: videoId });
           } catch (error) {
-            console.log("Video not converting to 1080p");
+            server.ioObject.sockets.emit("msg", { audioProcessed: 0, videoProcessed: 0, convertedVideoId: null });
           }
 
-          server.ioObject.sockets.emit("msg", {
-            audioProcessed: 0,
-            videoProcessed: 0,
-            convertedVideoId: null,
-            convertingError: true
-          });
-        })
+        }, 1000)
+      });
 
-        audio.pipe(ffmpegProcess.stdio[3]);
-        video.pipe(ffmpegProcess.stdio[4]);
+      video.on('error', () => {
+        try {
+          fs.unlinkSync(videoFilePath);
+        } catch (error) {
+          console.log("Video not converting to 1080p");
+        }
 
-        ffmpegProcess.stdio[5].pipe(fs.createWriteStream(`videos/${info.id}.mp4`));
+        server.ioObject.sockets.emit("msg", {
+          audioProcessed: 0,
+          videoProcessed: 0,
+          convertedVideoId: null,
+          convertingError: true
+        });
+      })
 
-        processes = { ...processes, [info.id]: { ffmpegProcess } }
-      }
+      audio.pipe(ffmpegProcess.stdio[3]);
+      video.pipe(ffmpegProcess.stdio[4]);
 
-      res.send();
-    });
+      processes = { ...processes, [videoId]: { ffmpegProcess } }
+    }
+
+    res.send();
   }
 }
 
@@ -119,23 +126,10 @@ const getVideoInformation = (req, res) => {
   const { downloadUrl } = req.query;
 
   return async () => {
-    youtubedl.getInfo(downloadUrl, ['-f', 'best'], (err, info) => {
-      if (err) throw err
+    const info = await ytdl.getInfo(downloadUrl);
+    const format  = ytdl.chooseFormat(info.formats, { quality: '22'});
 
-      res.json(info);
-    })
-  }
-}
-
-const downloadVideo = (req, res) => {
-  const { downloadUrl } = req.query;
-
-  return async () => {
-    const movieFileName = `${downloadUrl}.mp4`;
-
-    const filePath = path.join(__dirname, '../../videos/');
-
-    res.download(filePath + movieFileName, filePath);
+    res.json({ ...info, videoDetails: { ...info.videoDetails, ...format } });
   }
 }
 
@@ -151,10 +145,9 @@ const convertCancel = (req, res) => {
 
     childProcess.ffmpegProcess.stdio[3].destroy();
     childProcess.ffmpegProcess.stdio[4].destroy();
-    childProcess.ffmpegProcess.stdio[5].destroy();
 
     try {
-      fs.unlinkSync(path.join(__dirname, '../../videos/', `${downloadUrl}.mp4`));
+      fs.unlinkSync(path.join(videosPath, `${downloadUrl}.mp4`));
     } catch (error) {
       console.log("File to delete no found");
     }
@@ -167,21 +160,7 @@ const convertCancel = (req, res) => {
   }
 }
 
-const getCredentials = (req, res, next) => {
-  return async () => {
-    cp.exec('node ./controllers/youTube/getCreds.js', function (err, stdout, stderr) {
-      if (err) {
-        return next(err);
-      }
-      // send result to the view
-      res.render('veiw', { res:  stdout});
-    });
-  }
-}
-
-router.get('/get-credentials', authenticateJWT(getCredentials));
 router.post('/convert-cancel', authenticateJWT(convertCancel));
-router.get('/download-video', authenticateJWT(downloadVideo));
 router.get('/get-video-information', authenticateJWT(getVideoInformation));
 router.post('/convert-to-full-hd', authenticateJWT(convertToFullHD));
 
